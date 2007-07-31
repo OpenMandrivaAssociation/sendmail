@@ -4,8 +4,8 @@
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
-Version: 	8.14.0
-Release: 	%mkrel 2
+Version: 	8.14.1
+Release: 	%mkrel 1
 License:	BSD
 Group:		System/Servers
 Provides:	mail-server sendmail-command
@@ -390,7 +390,18 @@ fi
 /usr/bin/rmail
 /usr/bin/newaliases
 /usr/bin/mailq
-%{_mandir}/man*/*.bz2
+%{_mandir}/man1/mailq.1.*
+%{_mandir}/man1/newaliases.1.*
+%{_mandir}/man1/vacation.1.*
+%{_mandir}/man5/aliases.5.*
+%{_mandir}/man8/editmap.8.*
+%{_mandir}/man8/mail.local.8.*
+%{_mandir}/man8/mailstats.8.*
+%{_mandir}/man8/makemap.8.*
+%{_mandir}/man8/praliases.8.*
+%{_mandir}/man8/rmail.8.*
+%{_mandir}/man8/sendmail.8.*
+%{_mandir}/man8/smrsh.8.*
 
 # XXX can't do noreplace here or new sendmail will not deliver.
 %dir %_sysconfdir/smrsh

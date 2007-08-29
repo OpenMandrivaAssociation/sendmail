@@ -36,7 +36,7 @@ Patch50:	sendmail-8.11.1-up-limit.patch
 
 Buildroot:	%{_tmppath}/%{name}-%{version}-buildroot
 Requires(pre):	rpm-helper
-Requires(pre):	/usr/sbin/update-alternatives
+Requires(pre):	update-alternatives
 Requires:	procmail
 Requires:	bash >= 2.0
 Requires:	cyrus-sasl

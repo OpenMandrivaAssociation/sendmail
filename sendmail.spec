@@ -167,7 +167,11 @@ export ID="SBINOWN=${nameuser} SBINGRP=${namegroup} UBINOWN=${nameuser} UBINGRP=
 # (sb) fix example perl script interpreter paths
 sed -i 's|/usr/local/bin/perl|/usr/bin/perl|' contrib/*.pl
 
-%makeinstall DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man CF=mandrake $ID
+# see https://bugzilla.mandriva.com/show_bug.cgi?id=34050
+cat cf/cf/mandrake.mc | \
+        sed -e "s,%{_datadir}/sendmail-cf/m4/cf\.m4,../../cf/m4/cf.m4," \
+        > cf/cf/mandrake-build.mc
+%makeinstall DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man CF=mandrake-build $ID
 
 %make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/rmail
 %make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/mail.local
@@ -192,13 +196,19 @@ cp libmilter/README sendmail-docs%{_docdir}/sendmail/README.libmilter
 cp -ar libmilter/docs/ sendmail-docs%{_docdir}/sendmail/libmilter
 
 # install the cf files
-make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID CF=mandrake install-cf -C cf/cf
+make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID CF=mandrake-build install-cf -C cf/cf
+# restore include path
+sed -i -e "s,\.\./\.\./cf/m4/cf\.m4,%{_datadir}/sendmail-cf/m4/cf.m4,g" \
+        %{buildroot}%{_sysconfdir}/mail/sendmail.cf
+rm -f cf/cf/mandrake-build.mc
 pushd cf
 cp -ar * $RPM_BUILD_ROOT/usr/share/sendmail-cf
 install -m 644 %{SOURCE9} $RPM_BUILD_ROOT/usr/share/sendmail-cf/cf
 rm -f $RPM_BUILD_ROOT/usr/share/sendmail-cf/*/*.m4path
-make -C cf mandrake.cf
+make -C cf mandrake-build.cf
 popd
+
+rm -f %{buildroot}%{_datadir}/sendmail-cf/cf/mandrake-build.cf
 
 mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/mail
 sed -e 's|@@PATH@@|/usr/share/sendmail-cf|' < %{SOURCE6} > $RPM_BUILD_ROOT/%_sysconfdir/mail/sendmail.mc

@@ -34,6 +34,7 @@ Patch11:	sendmail-8.12.5-main_finis.patch
 
 Patch50:	sendmail-8.11.1-up-limit.patch
 
+Buildroot:	%{_tmppath}/%{name}-%{version}-buildroot
 Requires(pre):	rpm-helper
 Requires(pre):	update-alternatives
 Requires:	procmail

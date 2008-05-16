@@ -4,8 +4,8 @@
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
-Version: 	8.14.2
-Release: 	%mkrel 3
+Version: 	8.14.3
+Release: 	%mkrel 1
 License:	BSD
 Group:		System/Servers
 Provides:	mail-server sendmail-command

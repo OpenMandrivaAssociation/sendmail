@@ -5,7 +5,7 @@
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
 Version: 	8.14.3
-Release: 	%mkrel 2
+Release: 	%mkrel 3
 License:	BSD
 Group:		System/Servers
 Provides:	mail-server sendmail-command
@@ -22,7 +22,6 @@ Source7:	Sendmail.conf
 Source8:	sendmail.pam
 Source9:	sendmail-real-time.mc
 Source10:	README.mdk
-Source11:	sendmail-submit.mc
 Source13:	sendmail-certs.sh
 
 Patch1:		sendmail-8.10.0-makemapman.patch
@@ -31,6 +30,9 @@ Patch4:		sendmail-8.10.0-aliasesDoS.patch
 Patch5:		sendmail-8.12.10-movefiles.patch
 Patch9:		sendmail-8.14.0-mdk.patch
 Patch11:	sendmail-8.12.5-main_finis.patch
+# (cjw) set .pid file for queue runner and set some other mandriva defaults
+#       adapted from fedora sendmail package
+Patch12:	sendmail-submit.mc-mandriva.patch
 
 Patch50:	sendmail-8.11.1-up-limit.patch
 
@@ -111,6 +113,7 @@ This package includes the static libraries and header files
 %patch5 -p1 -b .movefiles
 %patch9 -p1 -b .mdk
 %patch11 -p1
+%patch12 -p1 -b .mandriva
 
 ##
 %patch50 -p1 -b .up-limit
@@ -119,7 +122,6 @@ This package includes the static libraries and header files
 # XXX REVERTING
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/mandrake.mc
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE9} > cf/cf/real-time.mc
-cp -f %{SOURCE11} cf/cf/submit.mc
 # (sb) smrsh path fixes in docs
 perl -pi -e 's|\/usr\/libexec|\/usr\/sbin|g' smrsh/README
 perl -pi -e 's|\/usr\/adm\/sm.bin|\/etc\/smrsh|g' smrsh/README
@@ -172,7 +174,10 @@ sed -i 's|/usr/local/bin/perl|/usr/bin/perl|' contrib/*.pl
 cat cf/cf/mandrake.mc | \
         sed -e "s,%{_datadir}/sendmail-cf/m4/cf\.m4,../../cf/m4/cf.m4," \
         > cf/cf/mandrake-build.mc
-%makeinstall DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man CF=mandrake-build $ID
+cat cf/cf/submit.mc | \
+        sed -e "s,%{_datadir}/sendmail-cf/m4/cf\.m4,../../cf/m4/cf.m4," \
+        > cf/cf/submit-build.mc
+%makeinstall DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man CF=mandrake-build SUBMIT=submit-build $ID
 
 %make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/rmail
 %make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/mail.local
@@ -197,11 +202,12 @@ cp libmilter/README sendmail-docs%{_docdir}/sendmail/README.libmilter
 cp -ar libmilter/docs/ sendmail-docs%{_docdir}/sendmail/libmilter
 
 # install the cf files
-make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID CF=mandrake-build install-cf -C cf/cf
+make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID CF=mandrake-build SUBMIT=submit-build install-cf -C cf/cf
 # restore include path
 sed -i -e "s,\.\./\.\./cf/m4/cf\.m4,%{_datadir}/sendmail-cf/m4/cf.m4,g" \
         %{buildroot}%{_sysconfdir}/mail/sendmail.cf
 rm -f cf/cf/mandrake-build.mc
+rm -f cf/cf/submit-build.mc
 pushd cf
 cp -ar * $RPM_BUILD_ROOT/usr/share/sendmail-cf
 install -m 644 %{SOURCE9} $RPM_BUILD_ROOT/usr/share/sendmail-cf/cf
@@ -213,6 +219,7 @@ rm -f %{buildroot}%{_datadir}/sendmail-cf/cf/mandrake-build.cf
 
 mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/mail
 sed -e 's|@@PATH@@|/usr/share/sendmail-cf|' < %{SOURCE6} > $RPM_BUILD_ROOT/%_sysconfdir/mail/sendmail.mc
+cp cf/cf/submit.mc $RPM_BUILD_ROOT/%_sysconfdir/mail/
 
 echo "# local-host-names - include all aliases for your machine here." > $RPM_BUILD_ROOT/%_sysconfdir/mail/local-host-names
 ( echo "# trusted-users - users that can send mail as others without a warning"
@@ -424,6 +431,7 @@ fi
 %attr(0444,root,mail) %config(noreplace)	%_sysconfdir/mail/sendmail.cf
 %attr(0444,root,mail) %config(noreplace)	%_sysconfdir/mail/submit.cf
 %attr(0644,root,mail) %config(noreplace) %_sysconfdir/mail/sendmail.mc
+%attr(0644,root,mail) %config(noreplace) %_sysconfdir/mail/submit.mc
 %config(noreplace)	%_sysconfdir/mail/local-host-names
 %config(noreplace)	%_sysconfdir/aliases
 %attr(0644,root,root) %ghost %_sysconfdir/aliases.db

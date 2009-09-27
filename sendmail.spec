@@ -26,10 +26,8 @@ Source13:	sendmail-certs.sh
 
 Patch1:		sendmail-8.10.0-makemapman.patch
 Patch3:		sendmail-8.8.7-rmail.patch
-Patch4:		sendmail-8.10.0-aliasesDoS.patch
 Patch5:		sendmail-8.12.10-movefiles.patch
 Patch9:		sendmail-8.14.0-mdk.patch
-Patch11:	sendmail-8.12.5-main_finis.patch
 # (cjw) set .pid file for queue runner and set some other mandriva defaults
 #       adapted from fedora sendmail package
 Patch12:	sendmail-submit.mc-mandriva.patch
@@ -109,12 +107,9 @@ This package includes the static libraries and header files
 %setup -q
 %patch1 -p1 -b .makemapman
 %patch3 -p1 -b .rmail
-%patch4 -p1 -b .aliases
 %patch5 -p1 -b .movefiles
 %patch9 -p1 -b .mdk
-%patch11 -p1
 %patch12 -p1 -b .mandriva
-
 ##
 %patch50 -p1 -b .up-limit
 ##

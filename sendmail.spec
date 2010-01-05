@@ -4,16 +4,17 @@
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
-Version: 	8.14.3
-Release: 	%mkrel 5
+Version: 	8.14.4
+Release: 	%mkrel 0
 License:	BSD
 Group:		System/Servers
 Provides:	mail-server sendmail-command
 Conflicts:	vacation postfix
 URL:		http://www.sendmail.org
 
-Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.bz2
+Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
 Source1:	sendmail.init
+Source2:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz.sig
 Source3:	aliases
 Source4:	sendmail.sysconfig
 Source5:	sendmail-etc-mail-Makefile

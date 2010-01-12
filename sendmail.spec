@@ -5,7 +5,7 @@
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
 Version: 	8.14.4
-Release: 	%mkrel 0
+Release: 	%mkrel 1
 License:	BSD
 Group:		System/Servers
 Provides:	mail-server sendmail-command
@@ -43,7 +43,7 @@ Requires:	bash >= 2.0
 Requires:	cyrus-sasl
 Requires:	openssl
 Requires: 	setup
-BuildRequires:  db4-devel
+BuildRequires:  db4.7-devel
 BuildRequires:  cyrus-sasl
 BuildRequires:  groff-for-man
 BuildRequires:  libgdbm-devel

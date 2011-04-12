@@ -43,7 +43,7 @@ Requires:	bash >= 2.0
 Requires:	cyrus-sasl
 Requires:	openssl
 Requires: 	setup
-BuildRequires:  db4.7-devel
+BuildRequires:  db-devel
 BuildRequires:  cyrus-sasl
 BuildRequires:  groff-for-man
 BuildRequires:  libgdbm-devel

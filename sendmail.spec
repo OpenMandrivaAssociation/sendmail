@@ -5,7 +5,7 @@
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
 Version: 	8.14.4
-Release: 	%mkrel 4
+Release: 	%mkrel 5
 License:	BSD
 Group:		System/Servers
 Provides:	mail-server sendmail-command
@@ -141,7 +141,8 @@ perl -pi -e 's|\`sh \$BUILDTOOLS\/bin\/find_m4.sh\`|\/usr\/bin\/m4|g' cf/cf/Buil
 %build
 
 %serverbuild 
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -DNETINET6"
+export RPM_OPT_FLAGS="%optflags -DNETINET6"
+export LDFLAGS="%ldflags"
 export confLIBDIR=%{_libdir}
 
 %make

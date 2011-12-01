@@ -174,14 +174,14 @@ cat cf/cf/mandrake.mc | \
 cat cf/cf/submit.mc | \
         sed -e "s,%{_datadir}/sendmail-cf/m4/cf\.m4,../../cf/m4/cf.m4," \
         > cf/cf/submit-build.mc
-%makeinstall DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man CF=mandrake-build SUBMIT=submit-build $ID
+%makeinstall DESTDIR=%{buildroot} MANROOT=%{_mandir}/man CF=mandrake-build SUBMIT=submit-build $ID
 
-%make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/rmail
-%make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/mail.local
+%make DESTDIR=%{buildroot} MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/rmail
+%make DESTDIR=%{buildroot} MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/mail.local
 
-%make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID install -C $OBJDIR/smrsh
+%make DESTDIR=%{buildroot} MANROOT=%{_mandir}/man $ID install -C $OBJDIR/smrsh
 
-ln -sf ../sbin/makemap $RPM_BUILD_ROOT/usr/bin/makemap
+ln -sf ../sbin/makemap %{buildroot}/usr/bin/makemap
 
 # install docs by hand - do it in builddir instead of RPM_BUILD_ROOT
 rm -fr sendmail-docs
@@ -199,29 +199,29 @@ cp libmilter/README sendmail-docs%{_docdir}/sendmail/README.libmilter
 cp -ar libmilter/docs/ sendmail-docs%{_docdir}/sendmail/libmilter
 
 # install the cf files
-make DESTDIR=$RPM_BUILD_ROOT MANROOT=%{_mandir}/man $ID CF=mandrake-build SUBMIT=submit-build install-cf -C cf/cf
+make DESTDIR=%{buildroot} MANROOT=%{_mandir}/man $ID CF=mandrake-build SUBMIT=submit-build install-cf -C cf/cf
 # restore include path
 sed -i -e "s,\.\./\.\./cf/m4/cf\.m4,%{_datadir}/sendmail-cf/m4/cf.m4,g" \
         %{buildroot}%{_sysconfdir}/mail/sendmail.cf
 rm -f cf/cf/mandrake-build.mc
 rm -f cf/cf/submit-build.mc
 pushd cf
-cp -ar * $RPM_BUILD_ROOT/usr/share/sendmail-cf
-install -m 644 %{SOURCE9} $RPM_BUILD_ROOT/usr/share/sendmail-cf/cf
-rm -f $RPM_BUILD_ROOT/usr/share/sendmail-cf/*/*.m4path
+cp -ar * %{buildroot}/usr/share/sendmail-cf
+install -m 644 %{SOURCE9} %{buildroot}/usr/share/sendmail-cf/cf
+rm -f %{buildroot}/usr/share/sendmail-cf/*/*.m4path
 make -C cf mandrake-build.cf
 popd
 
 rm -f %{buildroot}%{_datadir}/sendmail-cf/cf/mandrake-build.cf
 
-mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/mail
-sed -e 's|@@PATH@@|/usr/share/sendmail-cf|' < %{SOURCE6} > $RPM_BUILD_ROOT/%_sysconfdir/mail/sendmail.mc
-cp cf/cf/submit.mc $RPM_BUILD_ROOT/%_sysconfdir/mail/
+mkdir -p %{buildroot}/%_sysconfdir/mail
+sed -e 's|@@PATH@@|/usr/share/sendmail-cf|' < %{SOURCE6} > %{buildroot}/%_sysconfdir/mail/sendmail.mc
+cp cf/cf/submit.mc %{buildroot}/%_sysconfdir/mail/
 
-echo "# local-host-names - include all aliases for your machine here." > $RPM_BUILD_ROOT/%_sysconfdir/mail/local-host-names
+echo "# local-host-names - include all aliases for your machine here." > %{buildroot}/%_sysconfdir/mail/local-host-names
 ( echo "# trusted-users - users that can send mail as others without a warning"
 echo "# apache, mailman, majordomo, uucp, are good candidates" ) \
-	> $RPM_BUILD_ROOT/%_sysconfdir/mail/trusted-users
+	> %{buildroot}/%_sysconfdir/mail/trusted-users
 
 
 install -d -m755 %buildroot/var/spool/mqueue
@@ -236,7 +236,7 @@ for f in hoststat mailq newaliases purgestat
 
 mkdir -p %buildroot/%_sysconfdir/smrsh
 
-cat <<EOF > $RPM_BUILD_ROOT/%_sysconfdir/mail/access
+cat <<EOF > %{buildroot}/%_sysconfdir/mail/access
 # Check the /usr/share/doc/sendmail-%{version}/README.cf file for a description
 # of the format of this file. (search for access_db in that file)
 # The /usr/share/doc/sendmail-%{version}/README.cf is part of the sendmail-doc
@@ -251,41 +251,41 @@ EOF
 
 for map in virtusertable access domaintable mailertable
   do
-    touch $RPM_BUILD_ROOT/%_sysconfdir/mail/${map}
-    chmod 0644 $RPM_BUILD_ROOT/%_sysconfdir/mail/${map}
-    $RPM_BUILD_ROOT/usr/sbin/makemap -C $RPM_BUILD_ROOT/%_sysconfdir/mail/sendmail.cf hash $RPM_BUILD_ROOT/%_sysconfdir/mail/${map}.db < $RPM_BUILD_ROOT/%_sysconfdir/mail/${map}
-    chmod 0644 $RPM_BUILD_ROOT/%_sysconfdir/mail/${map}.db
+    touch %{buildroot}/%_sysconfdir/mail/${map}
+    chmod 0644 %{buildroot}/%_sysconfdir/mail/${map}
+    %{buildroot}/usr/sbin/makemap -C %{buildroot}/%_sysconfdir/mail/sendmail.cf hash %{buildroot}/%_sysconfdir/mail/${map}.db < %{buildroot}/%_sysconfdir/mail/${map}
+    chmod 0644 %{buildroot}/%_sysconfdir/mail/${map}.db
   done
-install -m644 %{SOURCE3} $RPM_BUILD_ROOT/%_sysconfdir/aliases
-$RPM_BUILD_ROOT/usr/sbin/makemap -C $RPM_BUILD_ROOT/%_sysconfdir/mail/sendmail.cf hash $RPM_BUILD_ROOT/%_sysconfdir/aliases.db < %{SOURCE3}
+install -m644 %{SOURCE3} %{buildroot}/%_sysconfdir/aliases
+%{buildroot}/usr/sbin/makemap -C %{buildroot}/%_sysconfdir/mail/sendmail.cf hash %{buildroot}/%_sysconfdir/aliases.db < %{SOURCE3}
 
-install -m644 %SOURCE4 $RPM_BUILD_ROOT/%_sysconfdir/sysconfig/sendmail
-install -m755 %SOURCE1 $RPM_BUILD_ROOT%{initdir}/sendmail
+install -m644 %SOURCE4 %{buildroot}/%_sysconfdir/sysconfig/sendmail
+install -m755 %SOURCE1 %{buildroot}%{initdir}/sendmail
 
-install -m 644 %{SOURCE5} $RPM_BUILD_ROOT/%_sysconfdir/mail/Makefile
+install -m 644 %{SOURCE5} %{buildroot}/%_sysconfdir/mail/Makefile
 
-chmod u+w $RPM_BUILD_ROOT/usr/sbin/{mailstats,praliases}
-chmod u+w $RPM_BUILD_ROOT/usr/bin/rmail
+chmod u+w %{buildroot}/usr/sbin/{mailstats,praliases}
+chmod u+w %{buildroot}/usr/bin/rmail
 
-install -m755 -d $RPM_BUILD_ROOT%{_libdir}/sasl2
-install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_libdir}/sasl2/Sendmail.conf
-install -m 644 %{SOURCE8} $RPM_BUILD_ROOT/%_sysconfdir/pam.d/smtp
+install -m755 -d %{buildroot}%{_libdir}/sasl2
+install -m 644 %{SOURCE7} %{buildroot}%{_libdir}/sasl2/Sendmail.conf
+install -m 644 %{SOURCE8} %{buildroot}/%_sysconfdir/pam.d/smtp
 
 # add certs directory for STARTTLS
-mkdir -p $RPM_BUILD_ROOT/%_sysconfdir/ssl/%{name}
+mkdir -p %{buildroot}/%_sysconfdir/ssl/%{name}
 # create placeholder certs
-pushd $RPM_BUILD_ROOT/%_sysconfdir/ssl/%{name}
+pushd %{buildroot}/%_sysconfdir/ssl/%{name}
 sh %{SOURCE13}
 popd
 
 %if %{alternatives}
-mv $RPM_BUILD_ROOT%{_sbindir}/sendmail $RPM_BUILD_ROOT%{_sbindir}/sendmail.sendmail
-mv $RPM_BUILD_ROOT/%{sendmaildir}/sendmail $RPM_BUILD_ROOT/%{sendmaildir}/sendmail.sendmail
+mv %{buildroot}%{_sbindir}/sendmail %{buildroot}%{_sbindir}/sendmail.sendmail
+mv %{buildroot}/%{sendmaildir}/sendmail %{buildroot}/%{sendmaildir}/sendmail.sendmail
 %endif
 
 # (sb) logrotate
-install -d $RPM_BUILD_ROOT%_sysconfdir/logrotate.d
-cat << EOF > $RPM_BUILD_ROOT%_sysconfdir/logrotate.d/statistics
+install -d %{buildroot}%_sysconfdir/logrotate.d
+cat << EOF > %{buildroot}%_sysconfdir/logrotate.d/statistics
 /var/log/statistics {
     missingok
     compress
@@ -299,7 +299,7 @@ EOF
 chmod 755 %{buildroot}%{_bindir}/* %{buildroot}%{_sbindir}/*
 	
 %clean
-rm -fr $RPM_BUILD_ROOT
+rm -fr %{buildroot}
 
 %pre
 %_pre_useradd mailnull /var/spool/mqueue /dev/null

@@ -1,0 +1,111 @@
+--- sendmail-8.12.10/mailstats/mailstats.8.movefiles	2002-09-27 01:03:39.000000000 +0200
++++ sendmail-8.12.10/mailstats/mailstats.8	2003-12-11 19:34:32.000000000 +0100
+@@ -100,7 +100,7 @@
+ .SH FILES
+ .PD 0.2v
+ .TP 2.5i
+-/etc/mail/sendmail.cf
++/etc/sendmail.cf
+ The default
+ .B sendmail
+ configuration file.
+--- sendmail-8.12.10/sendmail/sendmail.0.movefiles	2003-09-16 22:53:57.000000000 +0200
++++ sendmail-8.12.10/sendmail/sendmail.0	2003-12-11 19:34:32.000000000 +0100
+@@ -404,13 +404,13 @@
+        are only approximations.
+ 
+ 
+-        /etc/mail/aliases
++        /etc/aliases
+               raw data for alias names
+ 
+         /etc/mail/aliases.db
+               data base of alias names
+ 
+-        /etc/mail/sendmail.cf
++        /etc/sendmail.cf
+               configuration file
+ 
+         /etc/mail/helpfile
+--- sendmail-8.12.10/sendmail/sendmail.8.movefiles	2003-05-20 18:38:15.000000000 +0200
++++ sendmail-8.12.10/sendmail/sendmail.8	2003-12-11 19:34:32.000000000 +0100
+@@ -662,14 +662,14 @@
+ .I http://www.sendmail.org/tips/DontBlameSendmail.html
+ .SH FILES
+ Except for the file
+-.I /etc/mail/sendmail.cf
++.I /etc/sendmail.cf
+ itself the following pathnames are all specified in
+-.IR /etc/mail/sendmail.cf .
++.IR /etc/sendmail.cf .
+ Thus, 
+ these values are only approximations.
+ .PP
+ .TP
+- /etc/mail/aliases
++ /etc/aliases
+ raw data for alias names
+ .TP
+  /etc/mail/aliases.db
+--- sendmail-8.12.10/sendmail/newaliases.0.movefiles	2003-09-16 22:53:57.000000000 +0200
++++ sendmail-8.12.10/sendmail/newaliases.0	2003-12-11 19:48:02.000000000 +0100
+@@ -10,7 +10,7 @@
+ 
+ DDEESSCCRRIIPPTTIIOONN
+        NNeewwaalliiaasseess  rebuilds  the  random access data base for the mail aliases
+-       file /etc/mail/aliases.  It must be run each time this file is  changed
++       file /etc/aliases.  It must be run each time this file is  changed
+        in order for the change to take effect.
+ 
+        NNeewwaalliiaasseess is identical to ``sendmail -bi''.
+@@ -22,7 +22,7 @@
+        sseennddmmaaiill..
+ 
+ FFIILLEESS
+-       /etc/mail/aliases   The mail aliases file
++       /etc/aliases   The mail aliases file
+ 
+ SSEEEE AALLSSOO
+        aliases(5), sendmail(8)
+--- sendmail-8.12.10/sendmail/newaliases.1.movefiles	2001-10-10 05:23:17.000000000 +0200
++++ sendmail-8.12.10/sendmail/newaliases.1	2003-12-11 19:34:32.000000000 +0100
+@@ -20,7 +20,7 @@
+ .SH DESCRIPTION
+ .B Newaliases
+ rebuilds the random access data base for the mail aliases file
+-/etc/mail/aliases.  It must be run each time this file is changed
++/etc/aliases.  It must be run each time this file is changed
+ in order for the change to take effect.
+ .PP
+ .B Newaliases
+@@ -40,7 +40,7 @@
+ .B sendmail.
+ .SH FILES
+ .TP 2i
+-/etc/mail/aliases
++/etc/aliases
+ The mail aliases file
+ .SH SEE ALSO
+ aliases(5), sendmail(8)
+--- sendmail-8.12.10/cf/m4/cfhead.m4.movefiles	2003-04-03 19:51:51.000000000 +0200
++++ sendmail-8.12.10/cf/m4/cfhead.m4	2003-12-11 19:34:32.000000000 +0100
+@@ -259,7 +259,7 @@
+ define(`DATABASE_MAP_TYPE', `hash')
+ 
+ # set up default values for options
+-define(`ALIAS_FILE', `MAIL_SETTINGS_DIR`'aliases')
++define(`ALIAS_FILE', `/etc/aliases')
+ define(`confMAILER_NAME', ``MAILER-DAEMON'')
+ define(`confFROM_LINE', `From $g $d')
+ define(`confOPERATORS', `.:%@!^/[]+')
+--- sendmail-8.12.10/praliases/praliases.8.movefiles	2000-12-15 20:53:45.000000000 +0100
++++ sendmail-8.12.10/praliases/praliases.8	2003-12-11 19:34:32.000000000 +0100
+@@ -48,7 +48,7 @@
+ utility exits 0 on success, and >0 if an error occurs.
+ .SH FILES
+ .TP 2.5i
+-/etc/mail/sendmail.cf
++/etc/sendmail.cf
+ The default
+ .B sendmail
+ configuration file.

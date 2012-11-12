@@ -1,0 +1,21 @@
+---
+ cf/m4/proto.m4 |    4 	2 +	2 -	0 !
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: sendmail-8.14.3/cf/m4/proto.m4
+===================================================================
+--- sendmail-8.14.3.orig/cf/m4/proto.m4	2008-01-24 18:42:01.000000000 -0500
++++ sendmail-8.14.3/cf/m4/proto.m4	2009-05-28 05:07:57.000000000 -0400
+@@ -477,10 +477,10 @@ _OPTION(FallbackSmartHost, `confFALLBACK
+ _OPTION(TryNullMXList, `confTRY_NULL_MX_LIST', `False')
+ 
+ # load average at which we just queue messages
+-_OPTION(QueueLA, `confQUEUE_LA', `8')
++_OPTION(QueueLA, `confQUEUE_LA', `100')
+ 
+ # load average at which we refuse connections
+-_OPTION(RefuseLA, `confREFUSE_LA', `12')
++_OPTION(RefuseLA, `confREFUSE_LA', `100')
+ 
+ # log interval when refusing connections for this long
+ _OPTION(RejectLogInterval, `confREJECT_LOG_INTERVAL', `3h')

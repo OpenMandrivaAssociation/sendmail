@@ -1,0 +1,24 @@
+--- sendmail-8.14.3/cf/cf/submit.mc.bak	2006-04-05 07:54:41.000000000 +0200
++++ sendmail-8.14.3/cf/cf/submit.mc	2008-11-16 19:33:22.546617777 +0100
+@@ -15,12 +15,18 @@
+ #
+ 
+ divert(0)dnl
+-VERSIONID(`$Id: submit.mc,v 8.14 2006/04/05 05:54:41 ca Exp $')
++include(`/usr/share/sendmail-cf/m4/cf.m4')dnl
++VERSIONID(`linux setup')dnl
+ define(`confCF_VERSION', `Submit')dnl
+-define(`__OSTYPE__',`')dnl dirty hack to keep proto.m4 from complaining
+-define(`_USE_DECNET_SYNTAX_', `1')dnl support DECnet
++define(`__OSTYPE__',`linux')dnl
++dnl define(`_USE_DECNET_SYNTAX_', `1')dnl support DECnet
+ define(`confTIME_ZONE', `USE_TZ')dnl
+ define(`confDONT_INIT_GROUPS', `True')dnl
++define(`confPID_FILE', `/var/run/sm-client.pid')dnl
++dnl define(`confDIRECT_SUBMISSION_MODIFIERS',`C')dnl
++FEATURE(`use_ct_file')dnl
+ dnl
+ dnl If you use IPv6 only, change [127.0.0.1] to [IPv6:::1]
+ FEATURE(`msp', `[127.0.0.1]')dnl
++define(`confRUN_AS_USER',`mail:mail')dnl
++define(`confTRUSTED_USER',`mail')dnl

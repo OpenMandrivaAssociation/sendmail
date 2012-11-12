@@ -1,0 +1,16 @@
+---
+ rmail/rmail.c |    1 	0 +	1 -	0 !
+ 1 file changed, 1 deletion(-)
+
+Index: sendmail-8.14.3/rmail/rmail.c
+===================================================================
+--- sendmail-8.14.3.orig/rmail/rmail.c	2001-09-18 17:45:29.000000000 -0400
++++ sendmail-8.14.3/rmail/rmail.c	2009-05-28 05:00:25.000000000 -0400
+@@ -276,7 +276,6 @@ main(argc, argv)
+ 	args[i++] = _PATH_SENDMAIL;	/* Build sendmail's argument list. */
+ 	args[i++] = "-G";		/* relay submission */
+ 	args[i++] = "-oee";		/* No errors, just status. */
+-	args[i++] = "-odq";		/* Queue it, don't try to deliver. */
+ 	args[i++] = "-oi";		/* Ignore '.' on a line by itself. */
+ 
+ 	/* set from system and protocol used */

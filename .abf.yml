@@ -1,13 +1,4 @@
 sources:
-  "aliases:"	a31ffe8daae432a878c3684bc149a016484093e1
-  "README.mdk:"	b541e70597a3d66346202f427a542f08eba2f7b2
-  "sendmail.8.14.5.tar.gz:"	86dd2a8ad5eac892cd02cf67792a25efccacc100
-  "sendmail.8.14.5.tar.gz.sig:"	e3804e32f73a6aebe553a363dc70c2dedf705fb5
-  "sendmail-certs.sh:"	3e76e2097b2277a886521299277fcc1f405f405f
-  "Sendmail.conf:"	bea7b0d8a3d770d8199bf56ef8796fb33f5842b0
-  "sendmail-etc-mail-Makefile:"	c1c3dd9efe8ed1c50bab4622d93653697fca84c2
-  "sendmail.init:"	ab093191c85087b2fafcb71497092a76b3fe8978
-  "sendmail-mandrake.mc:"	6daf3278d9d659f098884fee410773789fe53baa
-  "sendmail.pam:"	08d9a04da6e3393f25b1d8c7b7c3619dae174c60
-  "sendmail-real-time.mc:"	5aec7a4e257d986bb8be7c10b81fc88e8c9c7ede
-  "sendmail.sysconfig:"	f339847ac9fa8f1d8fab92cc1340d6b758fdecaf
+  sendmail.8.14.5.tar.gz.sig: e3804e32f73a6aebe553a363dc70c2dedf705fb5
+  sendmail.8.14.5.tar.gz: 86dd2a8ad5eac892cd02cf67792a25efccacc100
+---

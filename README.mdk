@@ -1,0 +1,11 @@
+README:
+
+For smtp-auth to work, you need to install a sasl plugin.
+(libsasl2-plug-plain and libsasl2-plug-login for the default setup)
+
+To find more information on STARTTLS and AUTH, see:
+
+http://www.sendmail.org/~ca/email/starttls.html
+http://www.sendmail.org/~ca/email/auth.html
+https://www.TBS-internet.com/ssl/sendmail-tls.html
+

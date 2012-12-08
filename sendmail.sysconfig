@@ -1,0 +1,4 @@
+DAEMON=yes
+QUEUE=1h
+# Uncomment the next line for nullclient security:
+# DAEMONOPTIONS='-ODaemonPortOptions=Addr=localhost'

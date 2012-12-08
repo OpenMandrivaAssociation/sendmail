@@ -1,3 +1,10 @@
+%if %{_use_internal_dependency_generator}
+%define __noautoreq 'perl\\(Net::CIDR\\)'
+%endif
+
+%define _enable_debug_packages	%{nil}
+%define debug_package		%{nil}
+
 %define initdir 	/etc/rc.d/init.d
 %define	alternatives	1
 %define sendmaildir	%{_prefix}/lib
@@ -5,7 +12,7 @@
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
 Version: 	8.14.5
-Release: 	2
+Release: 	4
 License:	BSD
 Group:		System/Servers
 Provides:	mail-server sendmail-command
@@ -35,7 +42,6 @@ Patch12:	sendmail-submit.mc-mandriva.patch
 
 Patch50:	sendmail-8.11.1-up-limit.patch
 
-Buildroot:	%{_tmppath}/%{name}-%{version}-buildroot
 Requires(pre):	rpm-helper
 Requires(pre):	update-alternatives
 Requires:	procmail
@@ -52,7 +58,6 @@ BuildRequires:  libsasl-devel
 BuildRequires:  tcp_wrappers-devel
 BuildRequires:  libldap-devel
 BuildRequires:	openssl
-Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 The Sendmail program is a very widely used Mail Transport Agent (MTA).
@@ -104,7 +109,6 @@ Group: Development/Other
 This package includes the static libraries and header files
 
 %prep
-
 %setup -q
 %patch1 -p1 -b .makemapman
 %patch3 -p1 -b .rmail
@@ -148,11 +152,11 @@ export confLIBDIR=%{_libdir}
 %make
 
 %install
-rm -rf %buildroot
-mkdir -p %buildroot/{%_sysconfdir/sysconfig,%{initdir},%_sysconfdir/pam.d}
-mkdir -p %buildroot/{%_bindir,%_libdir,%{sendmaildir},%{_mandir}/man{1,5,8},%_sbindir}
-mkdir -p %buildroot/{var/log,var/spool,%_datadir/sendmail-cf,%_includedir/libmilter}
-mkdir -p %buildroot/%_docdir/sendmail
+rm -rf %{buildroot}
+mkdir -p %{buildroot}/{%{_sysconfdir}/sysconfig,%{initdir},%{_sysconfdir}/pam.d}
+mkdir -p %{buildroot}/{%_bindir,%_libdir,%{sendmaildir},%{_mandir}/man{1,5,8},%_sbindir}
+mkdir -p %{buildroot}/{var/log,var/spool,%_datadir/sendmail-cf,%_includedir/libmilter}
+mkdir -p %{buildroot}/%_docdir/sendmail
 
 OBJDIR=obj.$(uname -s).$(uname -r).$(arch)
 
@@ -214,29 +218,29 @@ popd
 
 rm -f %{buildroot}%{_datadir}/sendmail-cf/cf/mandrake-build.cf
 
-mkdir -p %{buildroot}/%_sysconfdir/mail
-sed -e 's|@@PATH@@|/usr/share/sendmail-cf|' < %{SOURCE6} > %{buildroot}/%_sysconfdir/mail/sendmail.mc
-cp cf/cf/submit.mc %{buildroot}/%_sysconfdir/mail/
+mkdir -p %{buildroot}/%{_sysconfdir}/mail
+sed -e 's|@@PATH@@|/usr/share/sendmail-cf|' < %{SOURCE6} > %{buildroot}/%{_sysconfdir}/mail/sendmail.mc
+cp cf/cf/submit.mc %{buildroot}/%{_sysconfdir}/mail/
 
-echo "# local-host-names - include all aliases for your machine here." > %{buildroot}/%_sysconfdir/mail/local-host-names
+echo "# local-host-names - include all aliases for your machine here." > %{buildroot}/%{_sysconfdir}/mail/local-host-names
 ( echo "# trusted-users - users that can send mail as others without a warning"
 echo "# apache, mailman, majordomo, uucp, are good candidates" ) \
-	> %{buildroot}/%_sysconfdir/mail/trusted-users
+	> %{buildroot}/%{_sysconfdir}/mail/trusted-users
 
 
-install -d -m755 %buildroot/var/spool/mqueue
-install -d -m755 %buildroot/var/spool/clientmqueue
+install -d -m755 %{buildroot}/var/spool/mqueue
+install -d -m755 %{buildroot}/var/spool/clientmqueue
 
 # dangling symlinks
-ln -sf ../sbin/sendmail.sendmail %buildroot/%{sendmaildir}/sendmail
+ln -sf ../sbin/sendmail.sendmail %{buildroot}/%{sendmaildir}/sendmail
 for f in hoststat mailq newaliases purgestat
   do
-    ln -sf ../sbin/sendmail.sendmail %buildroot/%_bindir/${f}
+    ln -sf ../sbin/sendmail.sendmail %{buildroot}/%_bindir/${f}
   done
 
-mkdir -p %buildroot/%_sysconfdir/smrsh
+mkdir -p %{buildroot}/%{_sysconfdir}/smrsh
 
-cat <<EOF > %{buildroot}/%_sysconfdir/mail/access
+cat <<EOF > %{buildroot}/%{_sysconfdir}/mail/access
 # Check the /usr/share/doc/sendmail-%{version}/README.cf file for a description
 # of the format of this file. (search for access_db in that file)
 # The /usr/share/doc/sendmail-%{version}/README.cf is part of the sendmail-doc
@@ -251,30 +255,30 @@ EOF
 
 for map in virtusertable access domaintable mailertable
   do
-    touch %{buildroot}/%_sysconfdir/mail/${map}
-    chmod 0644 %{buildroot}/%_sysconfdir/mail/${map}
-    %{buildroot}/usr/sbin/makemap -C %{buildroot}/%_sysconfdir/mail/sendmail.cf hash %{buildroot}/%_sysconfdir/mail/${map}.db < %{buildroot}/%_sysconfdir/mail/${map}
-    chmod 0644 %{buildroot}/%_sysconfdir/mail/${map}.db
+    touch %{buildroot}/%{_sysconfdir}/mail/${map}
+    chmod 0644 %{buildroot}/%{_sysconfdir}/mail/${map}
+    %{buildroot}/usr/sbin/makemap -C %{buildroot}/%{_sysconfdir}/mail/sendmail.cf hash %{buildroot}/%{_sysconfdir}/mail/${map}.db < %{buildroot}/%{_sysconfdir}/mail/${map}
+    chmod 0644 %{buildroot}/%{_sysconfdir}/mail/${map}.db
   done
-install -m644 %{SOURCE3} %{buildroot}/%_sysconfdir/aliases
-%{buildroot}/usr/sbin/makemap -C %{buildroot}/%_sysconfdir/mail/sendmail.cf hash %{buildroot}/%_sysconfdir/aliases.db < %{SOURCE3}
+install -m644 %{SOURCE3} %{buildroot}/%{_sysconfdir}/aliases
+%{buildroot}/usr/sbin/makemap -C %{buildroot}/%{_sysconfdir}/mail/sendmail.cf hash %{buildroot}/%{_sysconfdir}/aliases.db < %{SOURCE3}
 
-install -m644 %SOURCE4 %{buildroot}/%_sysconfdir/sysconfig/sendmail
+install -m644 %SOURCE4 %{buildroot}/%{_sysconfdir}/sysconfig/sendmail
 install -m755 %SOURCE1 %{buildroot}%{initdir}/sendmail
 
-install -m 644 %{SOURCE5} %{buildroot}/%_sysconfdir/mail/Makefile
+install -m 644 %{SOURCE5} %{buildroot}/%{_sysconfdir}/mail/Makefile
 
 chmod u+w %{buildroot}/usr/sbin/{mailstats,praliases}
 chmod u+w %{buildroot}/usr/bin/rmail
 
 install -m755 -d %{buildroot}%{_libdir}/sasl2
 install -m 644 %{SOURCE7} %{buildroot}%{_libdir}/sasl2/Sendmail.conf
-install -m 644 %{SOURCE8} %{buildroot}/%_sysconfdir/pam.d/smtp
+install -m 644 %{SOURCE8} %{buildroot}/%{_sysconfdir}/pam.d/smtp
 
 # add certs directory for STARTTLS
-mkdir -p %{buildroot}/%_sysconfdir/ssl/%{name}
+mkdir -p %{buildroot}/%{_sysconfdir}/ssl/%{name}
 # create placeholder certs
-pushd %{buildroot}/%_sysconfdir/ssl/%{name}
+pushd %{buildroot}/%{_sysconfdir}/ssl/%{name}
 sh %{SOURCE13}
 popd
 
@@ -284,8 +288,8 @@ mv %{buildroot}/%{sendmaildir}/sendmail %{buildroot}/%{sendmaildir}/sendmail.sen
 %endif
 
 # (sb) logrotate
-install -d %{buildroot}%_sysconfdir/logrotate.d
-cat << EOF > %{buildroot}%_sysconfdir/logrotate.d/statistics
+install -d %{buildroot}%{_sysconfdir}/logrotate.d
+cat << EOF > %{buildroot}%{_sysconfdir}/logrotate.d/statistics
 /var/log/statistics {
     missingok
     compress
@@ -298,9 +302,6 @@ EOF
 # make strip able to touch these
 chmod 755 %{buildroot}%{_bindir}/* %{buildroot}%{_sbindir}/*
 	
-%clean
-rm -fr %{buildroot}
-
 %pre
 %_pre_useradd mailnull /var/spool/mqueue /dev/null
 %_pre_useradd smmsp /var/spool/mqueue /dev/null
@@ -317,18 +318,18 @@ exit 0
 #
 # Convert old format to new
 #
-if [ -f %_sysconfdir/mail/deny ] ; then
-    cat %_sysconfdir/mail/deny | \
+if [ -f %{_sysconfdir}/mail/deny ] ; then
+    cat %{_sysconfdir}/mail/deny | \
 	awk 'BEGIN{ print "# Entries from obsoleted /etc/mail/deny"} \
-		  {print $1" REJECT"}' >> %_sysconfdir/mail/access
-    cp %_sysconfdir/mail/deny %_sysconfdir/mail/deny.rpmorig
+		  {print $1" REJECT"}' >> %{_sysconfdir}/mail/access
+    cp %{_sysconfdir}/mail/deny %{_sysconfdir}/mail/deny.rpmorig
 fi
 for oldfile in relay_allow ip_allow name_allow ; do
-    if [ -f %_sysconfdir/mail/$oldfile ] ; then
-	cat %_sysconfdir/mail/$oldfile | \
+    if [ -f %{_sysconfdir}/mail/$oldfile ] ; then
+	cat %{_sysconfdir}/mail/$oldfile | \
 		awk "BEGIN { print \"# Entries from obsoleted /etc/mail/$oldfile\" ;} \
-	     { print \$1\" RELAY\" }" >> %_sysconfdir/mail/access
-	cp %_sysconfdir/mail/$oldfile %_sysconfdir/mail/$oldfile.rpmorig
+	     { print \$1\" RELAY\" }" >> %{_sysconfdir}/mail/access
+	cp %{_sysconfdir}/mail/$oldfile %{_sysconfdir}/mail/$oldfile.rpmorig
      fi
 done
 
@@ -345,16 +346,16 @@ done
 #
 # Oops, these files moved
 #
-if [ -f %_sysconfdir/sendmail.cf -a ! -f %_sysconfdir/mail/sendmail.cf ] ; then
-	sed -e 's/^O AutoRebuildAliases/#O AutoRebuildAliases/'  %_sysconfdir/sendmail.cf > %_sysconfdir/mail/sendmail.cf
-	mv %_sysconfdir/sendmail.cf %_sysconfdir/sendmail.cf.rpmorig
+if [ -f %{_sysconfdir}/sendmail.cf -a ! -f %{_sysconfdir}/mail/sendmail.cf ] ; then
+	sed -e 's/^O AutoRebuildAliases/#O AutoRebuildAliases/'  %{_sysconfdir}/sendmail.cf > %{_sysconfdir}/mail/sendmail.cf
+	mv %{_sysconfdir}/sendmail.cf %{_sysconfdir}/sendmail.cf.rpmorig
 fi
 
-if [ -f %_sysconfdir/sendmail.cw ] ; then
-    cat %_sysconfdir/sendmail.cw  | \
+if [ -f %{_sysconfdir}/sendmail.cw ] ; then
+    cat %{_sysconfdir}/sendmail.cw  | \
       awk 'BEGIN { print "# Entries from obsoleted /etc/sendmail.cw" ;} \
-           { print $1 }' >> %_sysconfdir/mail/local-host-names
-    cp %_sysconfdir/sendmail.cw %_sysconfdir/sendmail.cw.rpmorig
+           { print $1 }' >> %{_sysconfdir}/mail/local-host-names
+    cp %{_sysconfdir}/sendmail.cw %{_sysconfdir}/sendmail.cw.rpmorig
 fi
 #
 # Rebuild maps (next reboot will rebuild also)
@@ -362,8 +363,8 @@ fi
 { /usr/bin/newaliases
   for map in virtusertable access domaintable mailertable
   do
-    if [ -f %_sysconfdir/mail/${map} ] ; then
-      /usr/sbin/makemap hash %_sysconfdir/mail/${map} < %_sysconfdir/mail/${map}
+    if [ -f %{_sysconfdir}/mail/${map} ] ; then
+      /usr/sbin/makemap hash %{_sysconfdir}/mail/${map} < %{_sysconfdir}/mail/${map}
       sleep 1
     fi
   done
@@ -419,58 +420,229 @@ fi
 %{_mandir}/man8/smrsh.8.*
 
 # XXX can't do noreplace here or new sendmail will not deliver.
-%dir %_sysconfdir/smrsh
-%dir %_sysconfdir/mail
-%attr(0755,root,mail) %dir %_sysconfdir/ssl/%{name}
-%attr(0600,root,mail) %config(noreplace)        %_sysconfdir/ssl/%{name}/*
+%dir %{_sysconfdir}/smrsh
+%dir %{_sysconfdir}/mail
+%attr(0755,root,mail) %dir %{_sysconfdir}/ssl/%{name}
+%attr(0600,root,mail) %config(noreplace)        %{_sysconfdir}/ssl/%{name}/*
 
-%config(noreplace) %_sysconfdir/mail/Makefile
-%attr(0444,root,mail) %config(noreplace)	%_sysconfdir/mail/sendmail.cf
-%attr(0444,root,mail) %config(noreplace)	%_sysconfdir/mail/submit.cf
-%attr(0644,root,mail) %config(noreplace) %_sysconfdir/mail/sendmail.mc
-%attr(0644,root,mail) %config(noreplace) %_sysconfdir/mail/submit.mc
-%config(noreplace)	%_sysconfdir/mail/local-host-names
-%config(noreplace)	%_sysconfdir/aliases
-%attr(0644,root,root) %ghost %_sysconfdir/aliases.db
+%config(noreplace) %{_sysconfdir}/mail/Makefile
+%attr(0444,root,mail) %config(noreplace)	%{_sysconfdir}/mail/sendmail.cf
+%attr(0444,root,mail) %config(noreplace)	%{_sysconfdir}/mail/submit.cf
+%attr(0644,root,mail) %config(noreplace) %{_sysconfdir}/mail/sendmail.mc
+%attr(0644,root,mail) %config(noreplace) %{_sysconfdir}/mail/submit.mc
+%config(noreplace)	%{_sysconfdir}/mail/local-host-names
+%config(noreplace)	%{_sysconfdir}/aliases
+%attr(0644,root,root) %ghost %{_sysconfdir}/aliases.db
 %attr(0750,root,mail) %dir /var/spool/mqueue
 %attr(0770,mail,mail) %dir /var/spool/clientmqueue
 %attr(4555,root,mail) /var/log/statistics
-%attr(0644,root,root) %ghost			%_sysconfdir/mail/virtusertable.db
-%attr(0644,root,root) %config(noreplace)	%_sysconfdir/mail/virtusertable
+%attr(0644,root,root) %ghost			%{_sysconfdir}/mail/virtusertable.db
+%attr(0644,root,root) %config(noreplace)	%{_sysconfdir}/mail/virtusertable
 
-%attr(0644,root,root) %ghost			%_sysconfdir/mail/access.db
-%attr(0644,root,root) %config(noreplace)	%_sysconfdir/mail/access
+%attr(0644,root,root) %ghost			%{_sysconfdir}/mail/access.db
+%attr(0644,root,root) %config(noreplace)	%{_sysconfdir}/mail/access
 
-%attr(0644,root,root) %ghost			%_sysconfdir/mail/domaintable.db
-%attr(0644,root,root) %config(noreplace)	%_sysconfdir/mail/domaintable
+%attr(0644,root,root) %ghost			%{_sysconfdir}/mail/domaintable.db
+%attr(0644,root,root) %config(noreplace)	%{_sysconfdir}/mail/domaintable
 
-%attr(0644,root,root) %ghost			%_sysconfdir/mail/mailertable.db
-%attr(0644,root,root) %config(noreplace)	%_sysconfdir/mail/mailertable
+%attr(0644,root,root) %ghost			%{_sysconfdir}/mail/mailertable.db
+%attr(0644,root,root) %config(noreplace)	%{_sysconfdir}/mail/mailertable
 
-%attr(0644,bin,bin) %config(noreplace)	%_sysconfdir/mail/helpfile
-%attr(0644,root,root) %config(noreplace)	%_sysconfdir/mail/trusted-users
+%attr(0644,bin,bin) %config(noreplace)	%{_sysconfdir}/mail/helpfile
+%attr(0644,root,root) %config(noreplace)	%{_sysconfdir}/mail/trusted-users
 
-%config(noreplace) %_sysconfdir/sysconfig/sendmail
+%config(noreplace) %{_sysconfdir}/sysconfig/sendmail
 
 %config(noreplace) %{initdir}/sendmail
 
 %config(noreplace) %{_libdir}/sasl2/Sendmail.conf
-%config(noreplace) %_sysconfdir/logrotate.d/statistics
-%config(noreplace) %_sysconfdir/pam.d/smtp
+%config(noreplace) %{_sysconfdir}/logrotate.d/statistics
+%config(noreplace) %{_sysconfdir}/pam.d/smtp
 
 %files cf
-%defattr(-,root,root)
 /usr/share/sendmail-cf
 
 %files doc
-%defattr(-,root,root)
 %doc contrib sendmail-docs%{_docdir}/sendmail
 
 %files devel
-%defattr(-,root,root)
 %doc libsm/{*.html,README} sendmail-docs%{_docdir}/sendmail/{libmilter,README.libmilter}
 %dir %{_includedir}/libmilter
 %{_includedir}/libmilter/*.h
 %{_libdir}/lib*.a
 
+
+
+
+%changelog
+* Sun May 22 2011 Oden Eriksson <oeriksson@mandriva.com> 8.14.5-1mdv2011.0
++ Revision: 677273
+- 8.14.5
+
+* Tue Apr 12 2011 Funda Wang <fwang@mandriva.org> 8.14.4-5
++ Revision: 652796
+- build with system ldflags
+- update dir for db5.1
+
+* Fri Dec 03 2010 Oden Eriksson <oeriksson@mandriva.com> 8.14.4-4mdv2011.0
++ Revision: 607531
+- rebuild
+
+* Wed Apr 07 2010 Funda Wang <fwang@mandriva.org> 8.14.4-3mdv2010.1
++ Revision: 532495
+- rebuild
+
+* Fri Feb 26 2010 Oden Eriksson <oeriksson@mandriva.com> 8.14.4-2mdv2010.1
++ Revision: 511636
+- rebuilt against openssl-0.9.8m
+
+* Tue Jan 12 2010 Oden Eriksson <oeriksson@mandriva.com> 8.14.4-1mdv2010.1
++ Revision: 490268
+- built against bdb 4.7 (db4.7-devel) due to unknown problems
+- 8.14.4 fixes CVE-2009-4565
+- 8.14.4
+- rebuilt against bdb 4.8
+
+* Mon Sep 28 2009 Olivier Blin <oblin@mandriva.com> 8.14.3-4mdv2010.0
++ Revision: 450362
+- rediff patches (from Arnaud Patard)
+- remove merged patches that were wrongly applying because of patch
+  fuzz (from Arnaud Patard)
+
+* Tue Nov 25 2008 Christiaan Welvaart <spturtle@mandriva.org> 8.14.3-3mdv2009.1
++ Revision: 306722
+- put submit.mc in /etc/mail
+- use a patch to add mandriva changes to submit.mc during build
+- move the real sm-client.pid file from /var/spool/clientmqueue to /var/run and fix the init script (fixes #45777)
+- sync /etc/mail/Makefile with fedora's package:
+  - add support for several optional tables
+  - handle sendmail.cf and submit.cf generation
+
+* Thu Aug 07 2008 Thierry Vignaud <tv@mandriva.org> 8.14.3-2mdv2009.0
++ Revision: 265692
+- rebuild early 2009.0 package (before pixel changes)
+
+* Fri May 16 2008 Christiaan Welvaart <spturtle@mandriva.org> 8.14.3-1mdv2009.0
++ Revision: 208238
+- 8.14.3
+
+* Wed Jan 23 2008 Thierry Vignaud <tv@mandriva.org> 8.14.2-3mdv2008.1
++ Revision: 157272
+- rebuild with fixed %%serverbuild macro
+
+  + Olivier Blin <oblin@mandriva.com>
+    - restore BuildRoot
+
+* Fri Dec 21 2007 Oden Eriksson <oeriksson@mandriva.com> 8.14.2-2mdv2008.1
++ Revision: 136279
+- rebuilt against new build deps
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%{buildroot} on Pixel's request
+
+* Thu Nov 29 2007 Christiaan Welvaart <spturtle@mandriva.org> 8.14.2-1mdv2008.1
++ Revision: 113834
+- 8.14.2
+
+* Tue Sep 25 2007 Anne Nicolas <ennael@mandriva.org> 8.14.1-2mdv2008.0
++ Revision: 92831
+- Bump release for reupload
+
+* Tue Sep 25 2007 Andreas Hasenack <andreas@mandriva.com> 8.14.1-1mdv2008.0
++ Revision: 92817
+- don't require sendmail-cf to build (#34050)
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill file require on update-alternatives
+
+  + Christiaan Welvaart <spturtle@mandriva.org>
+    - 8.14.1
+    - fix filelist for manpages
+
+* Fri Jun 22 2007 Andreas Hasenack <andreas@mandriva.com> 8.14.0-2mdv2008.0
++ Revision: 43260
+- rebuild with new serverbuild macro (-fstack-protector)
+
+
+* Thu Feb 15 2007 Stew Benedict <sbenedict@mandriva.com> 8.14.0-1mdv2007.0
++ Revision: 121447
+- Import sendmail
+
+* Thu Feb 15 2007 Stew Benedict <sbenedict@mandriva.com> 8.14.0-1mdv2007.0
+- 8.14.0
+- rediff P9
+- bunzip patches
+
+* Thu Aug 31 2006 Stew Benedict <sbenedict@mandriva.com> 8.13.8-1mdv2007.0
+- 8.13.8 (security fix for CVE-2006-4434)
+- fix init script for sm-client so restart works when the client has died
+
+* Fri Jun 16 2006 Stew Benedict <sbenedict@mandriva.com> 8.13.7-1mdv2007.0
+- 8.13.7 (security update for CVE-2006-1173)
+
+* Wed Mar 22 2006 Stew Benedict <sbenedict@mandriva.com> 8.13.6-1mdk
+- 8.13.6 (security update)
+
+* Mon Mar 06 2006 Stew Benedict <sbenedict@mandriva.com> 8.13.5-4mdk
+- update pam config
+
+* Fri Feb 10 2006 Stew Benedict <sbenedict@mandriva.com> 8.13.5-3mdk
+- parallel init
+
+* Sun Nov 13 2005 Oden Eriksson <oeriksson@mandriva.com> 8.13.5-2mdk
+- rebuilt against openssl-0.9.8a
+- make strip able to touch the binaries
+
+* Tue Oct 04 2005 Stew Benedict <sbenedict@mandriva.com> 8.13.5-1mdk
+- 8.13.5
+
+* Wed Sep 07 2005 Oden Eriksson <oeriksson@mandriva.com> 8.13.4-6mdk
+- rebuild
+- ake/iva
+
+* Wed Aug 31 2005 Oden Eriksson <oeriksson@mandriva.com> 8.13.4-5mdk
+- rebuilt against new openldap-2.3.6 libs
+
+* Sat Jul 02 2005 Stew Benedict <sbenedict@mandriva.com> 8.13.4-4mdk
+- new provides/alternatives scheme proposed by Guillaume
+
+* Wed Jun 08 2005 Stew Benedict <sbenedict@mandriva.com> 8.13.4-3mdk
+- forgot to define alternative as mta-smtp
+
+* Wed Jun 08 2005 Stew Benedict <sbenedict@mandriva.com> 8.13.4-2mdk
+- use alternates for /etc/pam.d/smtp (#16287)
+
+* Tue May 03 2005 Stew Benedict <sbenedict@mandriva.com> 8.13.4-1mdk
+- New release 8.13.4, logrotate "statstics", fix perl path in examples
+
+* Fri Feb 04 2005 Buchan Milne <bgmilne@linux-mandrake.com> 8.13.3-2mdk
+- rebuild for ldap2.2_7
+
+* Fri Jan 28 2005 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.3-1mdk
+- 8.13.3
+
+* Thu Dec 23 2004 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.2-1mdk
+- 8.13.2
+- more spec cleanup/rework (Stephane Lentz)
+-  redo patch9
+-  drop patch2 (patch9 does some, perl does the rest)
+-  drop patch0 (patch9 picks it up now)
+-  drop patch7 (use perl -pi)
+
+* Mon Dec 13 2004 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.1-2mdk
+- fix auth setup (Bugzilla #12309), 
+- warn about need for libsasl2-plug-<foo> for auth
+- some spec cleanups (Stephane Lentz), maybe more later
+-  drop source2, 12
+-  rename source 5
+
+* Wed Aug 11 2004 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.1-1mdk
+- 8.13.1
+- rebuild against libdb4.2
+
+* Tue Jul 27 2004 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.0-2mdk
+- fix paths in sendmail.mc (Jeremy Anderson)
+
+* Fri Jul 02 2004 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.0-1mdk
+- 8.13.0
 

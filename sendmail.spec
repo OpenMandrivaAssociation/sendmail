@@ -56,7 +56,7 @@ BuildRequires:  libgdbm-devel
 BuildRequires:  openssl-devel
 BuildRequires:  libsasl-devel
 BuildRequires:  tcp_wrappers-devel
-BuildRequires:  libldap-devel
+BuildRequires:  openldap-devel
 BuildRequires:	openssl
 
 %description

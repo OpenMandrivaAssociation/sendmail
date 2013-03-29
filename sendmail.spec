@@ -58,6 +58,7 @@ BuildRequires:  libsasl-devel
 BuildRequires:  tcp_wrappers-devel
 BuildRequires:  openldap-devel
 BuildRequires:	openssl
+BuildRequires:	tirpc-devel
 
 %description
 The Sendmail program is a very widely used Mail Transport Agent (MTA).

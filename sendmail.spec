@@ -54,7 +54,7 @@ BuildRequires:  cyrus-sasl
 BuildRequires:  groff-for-man
 BuildRequires:  libgdbm-devel
 BuildRequires:  openssl-devel
-BuildRequires:  libsasl-devel
+BuildRequires:  sasl-devel
 BuildRequires:  tcp_wrappers-devel
 BuildRequires:  openldap-devel
 BuildRequires:	openssl

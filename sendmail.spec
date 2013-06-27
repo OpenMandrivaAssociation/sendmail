@@ -15,10 +15,7 @@ Version: 	8.14.5
 Release: 	4
 License:	BSD
 Group:		System/Servers
-Provides:	mail-server sendmail-command
-Conflicts:	vacation postfix
-URL:		http://www.sendmail.org
-
+Url:		http://www.sendmail.org
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
 Source1:	sendmail.init
 Source2:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz.sig
@@ -31,7 +28,6 @@ Source8:	sendmail.pam
 Source9:	sendmail-real-time.mc
 Source10:	README.mdk
 Source13:	sendmail-certs.sh
-
 Patch1:		sendmail-8.10.0-makemapman.patch
 Patch3:		sendmail-8.8.7-rmail.patch
 Patch5:		sendmail-8.12.10-movefiles.patch
@@ -39,26 +35,29 @@ Patch9:		sendmail-8.14.0-mdk.patch
 # (cjw) set .pid file for queue runner and set some other mandriva defaults
 #       adapted from fedora sendmail package
 Patch12:	sendmail-submit.mc-mandriva.patch
-
 Patch50:	sendmail-8.11.1-up-limit.patch
 
+BuildRequires:	cyrus-sasl
+BuildRequires:	groff-base
+BuildRequires:	openssl
+BuildRequires:	db-devel
+BuildRequires:	gdbm-devel
+BuildRequires:	sasl-devel
+BuildRequires:	tcp_wrappers-devel
+BuildRequires:	openldap-devel
+BuildRequires:	pkgconfig(libtirpc)
+BuildRequires:	pkgconfig(openssl)
 Requires(pre):	rpm-helper
 Requires(pre):	update-alternatives
 Requires:	procmail
 Requires:	bash >= 2.0
 Requires:	cyrus-sasl
 Requires:	openssl
-Requires: 	setup
-BuildRequires:  db-devel
-BuildRequires:  cyrus-sasl
-BuildRequires:  groff-for-man
-BuildRequires:  libgdbm-devel
-BuildRequires:  openssl-devel
-BuildRequires:  sasl-devel
-BuildRequires:  tcp_wrappers-devel
-BuildRequires:  openldap-devel
-BuildRequires:	openssl
-BuildRequires:	tirpc-devel
+Requires:	setup
+Provides:	mail-server
+Provides:	sendmail-command
+Conflicts:	vacation
+Conflicts:	postfix
 
 %description
 The Sendmail program is a very widely used Mail Transport Agent (MTA).
@@ -104,21 +103,14 @@ sendmail.cf file.
 
 %package devel
 Summary:	Sendmail static libraries and headers file
-Group: Development/Other
+Group: 		Development/Other
 
 %description devel
 This package includes the static libraries and header files
 
 %prep
 %setup -q
-%patch1 -p1 -b .makemapman
-%patch3 -p1 -b .rmail
-%patch5 -p1 -b .movefiles
-%patch9 -p1 -b .mdk
-%patch12 -p1 -b .mandriva
-##
-%patch50 -p1 -b .up-limit
-##
+%apply_patches
 
 # XXX REVERTING
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/mandrake.mc
@@ -144,7 +136,6 @@ mv smrsh/smrsh.8.mdk smrsh/smrsh.8
 perl -pi -e 's|\`sh \$BUILDTOOLS\/bin\/find_m4.sh\`|\/usr\/bin\/m4|g' cf/cf/Build
 
 %build
-
 %serverbuild 
 export RPM_OPT_FLAGS="%optflags -DNETINET6"
 export LDFLAGS="%ldflags"
@@ -153,11 +144,10 @@ export confLIBDIR=%{_libdir}
 %make
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}/{%{_sysconfdir}/sysconfig,%{initdir},%{_sysconfdir}/pam.d}
-mkdir -p %{buildroot}/{%_bindir,%_libdir,%{sendmaildir},%{_mandir}/man{1,5,8},%_sbindir}
-mkdir -p %{buildroot}/{var/log,var/spool,%_datadir/sendmail-cf,%_includedir/libmilter}
-mkdir -p %{buildroot}/%_docdir/sendmail
+mkdir -p %{buildroot}/{%{_bindir},%{_libdir},%{sendmaildir},%{_mandir}/man{1,5,8},%{_sbindir}}
+mkdir -p %{buildroot}/{var/log,var/spool,%{_datadir}/sendmail-cf,%{_includedir}/libmilter}
+mkdir -p %{buildroot}/%{_docdir}/sendmail
 
 OBJDIR=obj.$(uname -s).$(uname -r).$(arch)
 
@@ -236,7 +226,7 @@ install -d -m755 %{buildroot}/var/spool/clientmqueue
 ln -sf ../sbin/sendmail.sendmail %{buildroot}/%{sendmaildir}/sendmail
 for f in hoststat mailq newaliases purgestat
   do
-    ln -sf ../sbin/sendmail.sendmail %{buildroot}/%_bindir/${f}
+    ln -sf ../sbin/sendmail.sendmail %{buildroot}/%{_bindir}/${f}
   done
 
 mkdir -p %{buildroot}/%{_sysconfdir}/smrsh
@@ -385,7 +375,6 @@ fi
 /sbin/chkconfig --add sendmail
 
 %files
-%defattr(-,root,root)
 %attr(0555,bin,bin) /usr/bin/vacation
 /usr/bin/hoststat
 /usr/bin/purgestat
@@ -471,179 +460,4 @@ fi
 %dir %{_includedir}/libmilter
 %{_includedir}/libmilter/*.h
 %{_libdir}/lib*.a
-
-
-
-
-%changelog
-* Sun May 22 2011 Oden Eriksson <oeriksson@mandriva.com> 8.14.5-1mdv2011.0
-+ Revision: 677273
-- 8.14.5
-
-* Tue Apr 12 2011 Funda Wang <fwang@mandriva.org> 8.14.4-5
-+ Revision: 652796
-- build with system ldflags
-- update dir for db5.1
-
-* Fri Dec 03 2010 Oden Eriksson <oeriksson@mandriva.com> 8.14.4-4mdv2011.0
-+ Revision: 607531
-- rebuild
-
-* Wed Apr 07 2010 Funda Wang <fwang@mandriva.org> 8.14.4-3mdv2010.1
-+ Revision: 532495
-- rebuild
-
-* Fri Feb 26 2010 Oden Eriksson <oeriksson@mandriva.com> 8.14.4-2mdv2010.1
-+ Revision: 511636
-- rebuilt against openssl-0.9.8m
-
-* Tue Jan 12 2010 Oden Eriksson <oeriksson@mandriva.com> 8.14.4-1mdv2010.1
-+ Revision: 490268
-- built against bdb 4.7 (db4.7-devel) due to unknown problems
-- 8.14.4 fixes CVE-2009-4565
-- 8.14.4
-- rebuilt against bdb 4.8
-
-* Mon Sep 28 2009 Olivier Blin <oblin@mandriva.com> 8.14.3-4mdv2010.0
-+ Revision: 450362
-- rediff patches (from Arnaud Patard)
-- remove merged patches that were wrongly applying because of patch
-  fuzz (from Arnaud Patard)
-
-* Tue Nov 25 2008 Christiaan Welvaart <spturtle@mandriva.org> 8.14.3-3mdv2009.1
-+ Revision: 306722
-- put submit.mc in /etc/mail
-- use a patch to add mandriva changes to submit.mc during build
-- move the real sm-client.pid file from /var/spool/clientmqueue to /var/run and fix the init script (fixes #45777)
-- sync /etc/mail/Makefile with fedora's package:
-  - add support for several optional tables
-  - handle sendmail.cf and submit.cf generation
-
-* Thu Aug 07 2008 Thierry Vignaud <tv@mandriva.org> 8.14.3-2mdv2009.0
-+ Revision: 265692
-- rebuild early 2009.0 package (before pixel changes)
-
-* Fri May 16 2008 Christiaan Welvaart <spturtle@mandriva.org> 8.14.3-1mdv2009.0
-+ Revision: 208238
-- 8.14.3
-
-* Wed Jan 23 2008 Thierry Vignaud <tv@mandriva.org> 8.14.2-3mdv2008.1
-+ Revision: 157272
-- rebuild with fixed %%serverbuild macro
-
-  + Olivier Blin <oblin@mandriva.com>
-    - restore BuildRoot
-
-* Fri Dec 21 2007 Oden Eriksson <oeriksson@mandriva.com> 8.14.2-2mdv2008.1
-+ Revision: 136279
-- rebuilt against new build deps
-
-  + Thierry Vignaud <tv@mandriva.org>
-    - kill re-definition of %%{buildroot} on Pixel's request
-
-* Thu Nov 29 2007 Christiaan Welvaart <spturtle@mandriva.org> 8.14.2-1mdv2008.1
-+ Revision: 113834
-- 8.14.2
-
-* Tue Sep 25 2007 Anne Nicolas <ennael@mandriva.org> 8.14.1-2mdv2008.0
-+ Revision: 92831
-- Bump release for reupload
-
-* Tue Sep 25 2007 Andreas Hasenack <andreas@mandriva.com> 8.14.1-1mdv2008.0
-+ Revision: 92817
-- don't require sendmail-cf to build (#34050)
-
-  + Thierry Vignaud <tv@mandriva.org>
-    - kill file require on update-alternatives
-
-  + Christiaan Welvaart <spturtle@mandriva.org>
-    - 8.14.1
-    - fix filelist for manpages
-
-* Fri Jun 22 2007 Andreas Hasenack <andreas@mandriva.com> 8.14.0-2mdv2008.0
-+ Revision: 43260
-- rebuild with new serverbuild macro (-fstack-protector)
-
-
-* Thu Feb 15 2007 Stew Benedict <sbenedict@mandriva.com> 8.14.0-1mdv2007.0
-+ Revision: 121447
-- Import sendmail
-
-* Thu Feb 15 2007 Stew Benedict <sbenedict@mandriva.com> 8.14.0-1mdv2007.0
-- 8.14.0
-- rediff P9
-- bunzip patches
-
-* Thu Aug 31 2006 Stew Benedict <sbenedict@mandriva.com> 8.13.8-1mdv2007.0
-- 8.13.8 (security fix for CVE-2006-4434)
-- fix init script for sm-client so restart works when the client has died
-
-* Fri Jun 16 2006 Stew Benedict <sbenedict@mandriva.com> 8.13.7-1mdv2007.0
-- 8.13.7 (security update for CVE-2006-1173)
-
-* Wed Mar 22 2006 Stew Benedict <sbenedict@mandriva.com> 8.13.6-1mdk
-- 8.13.6 (security update)
-
-* Mon Mar 06 2006 Stew Benedict <sbenedict@mandriva.com> 8.13.5-4mdk
-- update pam config
-
-* Fri Feb 10 2006 Stew Benedict <sbenedict@mandriva.com> 8.13.5-3mdk
-- parallel init
-
-* Sun Nov 13 2005 Oden Eriksson <oeriksson@mandriva.com> 8.13.5-2mdk
-- rebuilt against openssl-0.9.8a
-- make strip able to touch the binaries
-
-* Tue Oct 04 2005 Stew Benedict <sbenedict@mandriva.com> 8.13.5-1mdk
-- 8.13.5
-
-* Wed Sep 07 2005 Oden Eriksson <oeriksson@mandriva.com> 8.13.4-6mdk
-- rebuild
-- ake/iva
-
-* Wed Aug 31 2005 Oden Eriksson <oeriksson@mandriva.com> 8.13.4-5mdk
-- rebuilt against new openldap-2.3.6 libs
-
-* Sat Jul 02 2005 Stew Benedict <sbenedict@mandriva.com> 8.13.4-4mdk
-- new provides/alternatives scheme proposed by Guillaume
-
-* Wed Jun 08 2005 Stew Benedict <sbenedict@mandriva.com> 8.13.4-3mdk
-- forgot to define alternative as mta-smtp
-
-* Wed Jun 08 2005 Stew Benedict <sbenedict@mandriva.com> 8.13.4-2mdk
-- use alternates for /etc/pam.d/smtp (#16287)
-
-* Tue May 03 2005 Stew Benedict <sbenedict@mandriva.com> 8.13.4-1mdk
-- New release 8.13.4, logrotate "statstics", fix perl path in examples
-
-* Fri Feb 04 2005 Buchan Milne <bgmilne@linux-mandrake.com> 8.13.3-2mdk
-- rebuild for ldap2.2_7
-
-* Fri Jan 28 2005 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.3-1mdk
-- 8.13.3
-
-* Thu Dec 23 2004 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.2-1mdk
-- 8.13.2
-- more spec cleanup/rework (Stephane Lentz)
--  redo patch9
--  drop patch2 (patch9 does some, perl does the rest)
--  drop patch0 (patch9 picks it up now)
--  drop patch7 (use perl -pi)
-
-* Mon Dec 13 2004 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.1-2mdk
-- fix auth setup (Bugzilla #12309), 
-- warn about need for libsasl2-plug-<foo> for auth
-- some spec cleanups (Stephane Lentz), maybe more later
--  drop source2, 12
--  rename source 5
-
-* Wed Aug 11 2004 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.1-1mdk
-- 8.13.1
-- rebuild against libdb4.2
-
-* Tue Jul 27 2004 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.0-2mdk
-- fix paths in sendmail.mc (Jeremy Anderson)
-
-* Fri Jul 02 2004 Stew Benedict <sbenedict@mandrakesoft.com> 8.13.0-1mdk
-- 8.13.0
 

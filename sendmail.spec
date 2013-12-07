@@ -12,7 +12,7 @@
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
 Version: 	8.14.5
-Release: 	7
+Release: 	8
 License:	BSD
 Group:		System/Servers
 Url:		http://www.sendmail.org

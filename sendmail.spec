@@ -136,7 +136,7 @@ mv smrsh/smrsh.8.mdk smrsh/smrsh.8
 perl -pi -e 's|\`sh \$BUILDTOOLS\/bin\/find_m4.sh\`|\/usr\/bin\/m4|g' cf/cf/Build
 
 %build
-%serverbuild 
+%setup_compile_flags
 export RPM_OPT_FLAGS="%optflags -DNETINET6"
 export LDFLAGS="%ldflags"
 export confLIBDIR=%{_libdir}

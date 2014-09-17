@@ -141,13 +141,14 @@ mv smrsh/smrsh.8.mdk smrsh/smrsh.8
 # (sb) m4 path
 perl -pi -e 's|\`sh \$BUILDTOOLS\/bin\/find_m4.sh\`|\/usr\/bin\/m4|g' cf/cf/Build
 
+# replace cc with __cc macro
+sed -i 's!cc!%{__cc}!g' devtools/M4/header.m4
+
 %build
 %setup_compile_flags
 export RPM_OPT_FLAGS="%optflags -DNETINET6"
 export confLIBDIR=%{_libdir}
-export confCC=%{__cc}
 
-sed -i 's!CC=	confCC!CC=%{__cc}!g' devtools/M4/UNIX/defines.m4 
 %make LDOPTS="%ldflags"
 
 %install
@@ -164,6 +165,7 @@ nameuser=`id -nu`
 namegroup=`id -ng`
 
 export confLIBDIR=%{_libdir}
+
 export ID="SBINOWN=${nameuser} SBINGRP=${namegroup} UBINOWN=${nameuser} UBINGRP=${namegroup} MANOWN=${nameuser} MANGRP=${namegroup} MSPQOWN=${nameuser} GBINGRP=${namegroup} GBINOWN=${nameuser} GBINGRP=${namegroup} MSPQOWN=${nameuser} MBINOWN=${nameuser} MBINGRP=${namegroup} LIBOWN=${nameuser} LIBGRP=${namegroup} CFOWN=${nameuser} CFGRP=${namegroup} INCOWN=${nameuser} INCGRP=${namegroup} CFMODE=0644"
 
 # (sb) fix example perl script interpreter paths

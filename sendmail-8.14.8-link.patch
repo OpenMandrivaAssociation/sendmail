@@ -1,0 +1,11 @@
+diff -up sendmail-8.14.8/devtools/Site/site.config.m4.resolv sendmail-8.14.8/devtools/Site/site.config.m4
+--- sendmail-8.14.8/devtools/Site/site.config.m4.resolv	2014-02-09 16:45:06.299887401 +0100
++++ sendmail-8.14.8/devtools/Site/site.config.m4	2014-02-09 18:13:37.837131005 +0100
+@@ -1,6 +1,6 @@
+ define(`confMAPDEF', `-DNEWDB -DNIS -DMAP_REGEX -DLDAPMAP')
+ define(`confENVDEF', `$(RPM_OPT_FLAGS) -I/usr/include/sasl -DXDEBUG=0 -DTCPWRAPPERS -DSASL=2 -DSTARTTLS ')
+-define(`confLIBS', `-lnsl -lwrap -lldap -llber -lsasl2 -lcrypt -lssl -lcrypto -ldb')
++define(`confLIBS', `-lnsl -lwrap -lldap -llber -lsasl2 -lcrypt -lssl -lcrypto -ldb -lresolv')
+ define(`confSTDIO_TYPE', `portable')
+ define(`confLDOPTS', `-s')
+ define(`confMANOWN', `root')

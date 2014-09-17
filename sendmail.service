@@ -1,0 +1,19 @@
+[Unit]
+Description=Sendmail Mail Transport Agent
+After=syslog.target network.target
+Conflicts=postfix.service exim.service
+Wants=sm-client.service
+
+[Service]
+Type=forking
+PIDFile=/var/run/sendmail.pid
+Environment=QUEUE=1h
+Environment=DAEMONOPTIONS=
+EnvironmentFile=-/etc/sysconfig/sendmail
+ExecStartPre=-/usr/bin/newaliases
+ExecStartPre=-/usr/bin/make -C /etc/mail -s
+ExecStart=/bin/sh -c 'exec /usr/sbin/sendmail.sendmail $DAEMONOPTIONS -bd $(if [ -n "$QUEUE" ]; then echo -q$QUEUE; fi)'
+
+[Install]
+WantedBy=multi-user.target
+Also=sm-client.service

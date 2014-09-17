@@ -1,0 +1,18 @@
+[Unit]
+Description=Sendmail Mail Transport Client
+After=syslog.target network.target sendmail.service
+Conflicts=postfix.service exim.service
+BindTo=sendmail.service
+
+[Service]
+Type=forking
+PIDFile=/var/run/sm-client.pid
+Environment=QUEUE=1h
+EnvironmentFile=-/etc/sysconfig/sendmail
+ExecStartPre=/bin/touch /var/run/sm-client.pid
+ExecStartPre=/bin/chown mail:mail /var/run/sm-client.pid
+ExecStartPre=-/usr/bin/make -C /etc/mail -s
+ExecStart=/bin/sh -c 'exec /usr/sbin/sendmail.sendmail -L sm-msp-queue -Ac $(if [ -n "$QUEUE" ]; then echo -q$QUEUE; fi)'
+
+[Install]
+WantedBy=multi-user.target

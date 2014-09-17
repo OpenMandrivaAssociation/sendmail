@@ -1,11 +1,11 @@
---- sendmail-8.14.0/devtools/Site/site.config.m4.mdk	2007-02-15 17:59:18.000000000 +0100
-+++ sendmail-8.14.0/devtools/Site/site.config.m4	2007-02-15 17:59:18.000000000 +0100
+--- sendmail-8.14.5/devtools/Site/site.config.m4.mageia	2011-06-19 19:29:56.804770133 +0200
++++ sendmail-8.14.5/devtools/Site/site.config.m4	2011-06-19 19:34:48.370652870 +0200
 @@ -0,0 +1,21 @@
 +define(`confMAPDEF', `-DNEWDB -DNIS -DMAP_REGEX -DLDAPMAP')
-+define(`confENVDEF', `$(RPM_OPT_FLAGS) -I/usr/include/db -I/usr/include/sasl -DXDEBUG=0 -DTCPWRAPPERS -DSASL=2 -DSTARTTLS ')
++define(`confENVDEF', `$(RPM_OPT_FLAGS) -I/usr/include/sasl -DXDEBUG=0 -DTCPWRAPPERS -DSASL=2 -DSTARTTLS ')
 +define(`confLIBS', `-lnsl -lwrap -lldap -llber -lsasl2 -lcrypt -lssl -lcrypto -ldb')
 +define(`confSTDIO_TYPE', `portable')
-+define(`confLDOPTS', `-s $(LDFLAGS)')
++define(`confLDOPTS', `-s')
 +define(`confMANOWN', `root')
 +define(`confMANGRP', `root')
 +define(`confMANMODE', `644')
@@ -22,7 +22,7 @@
 +APPENDDEF(`conf_sendmail_ENVDEF', `-DSTARTTLS -DSASL -DFALSE=0 -DTRUE=1 ')
 +APPENDDEF(`conf_sendmail_LIBS', `-lssl -lcrypto -lsasl2')
 +APPENDDEF(`conf_sendmail_ENVDEF', `-DMILTER')
---- sendmail-8.14.0/Makefile.mdk	2001-08-23 22:44:39.000000000 +0200
+--- sendmail-8.14.0/Makefile.mageia	2001-08-23 22:44:39.000000000 +0200
 +++ sendmail-8.14.0/Makefile	2007-02-15 17:59:23.000000000 +0100
 @@ -2,7 +2,7 @@
  

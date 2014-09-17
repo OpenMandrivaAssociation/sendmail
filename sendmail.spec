@@ -140,6 +140,7 @@ perl -pi -e 's|\`sh \$BUILDTOOLS\/bin\/find_m4.sh\`|\/usr\/bin\/m4|g' cf/cf/Buil
 export RPM_OPT_FLAGS="%optflags -DNETINET6"
 export LDFLAGS="%ldflags"
 export confLIBDIR=%{_libdir}
+export CC=%{__cc}
 
 %make
 

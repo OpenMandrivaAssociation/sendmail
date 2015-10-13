@@ -1,10 +1,11 @@
 %define	alternatives	1
 %define sendmaildir	%{_prefix}/lib
+%define _disable_lto 1
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
 Version: 	8.14.9
-Release: 	3
+Release: 	4
 License:	BSD
 Group:		System/Servers
 Provides:	mail-server sendmail-command

@@ -41,6 +41,7 @@ Patch15:	sendmail-8.14.8-link.patch
 
 Patch50:	sendmail-8.11.1-up-limit.patch
 
+BuildRequires:	pkgconfig(libnsl)
 BuildRequires:	cyrus-sasl
 BuildRequires:	groff-base
 BuildRequires:	openssl

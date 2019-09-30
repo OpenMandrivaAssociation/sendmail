@@ -198,6 +198,7 @@ export ID="SBINOWN=${nameuser} SBINGRP=${namegroup} UBINOWN=${nameuser} UBINGRP=
 # (sb) fix example perl script interpreter paths
 sed -i 's|/usr/local/bin/perl|/usr/bin/perl|' contrib/*.pl
 sed -i 's|/usr/perl5/bin/perl|/usr/bin/perl|' contrib/*.pl
+sed -i 's|/bin/perl|/usr/bin/perl|' contrib/*.pl
 
 # see https://bugzilla.mandriva.com/show_bug.cgi?id=34050
 cat cf/cf/mandrake.mc | \

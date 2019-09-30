@@ -1,6 +1,6 @@
 #!/bin/sh
-openssl genrsa -out CAkey.pem -rand Randomdata 1024
-openssl genrsa -out MYkey.pem -rand Randomdata 1024
+openssl genrsa -out CAkey.pem 4096
+openssl genrsa -out MYkey.pem 4096
 openssl req -new -x509 -days 730 -key CAkey.pem -out CAcert.pem << EOF
 --
 SomeState

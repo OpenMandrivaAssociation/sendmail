@@ -1,12 +1,15 @@
 %define	alternatives	1
 %define sendmaildir	%{_prefix}/lib
-%define _disable_lto 1
+
+%define miltersomajor 1.0
+%define libname %mklibname milter %{miltersomajor}
+%define devname %mklibname milter -d
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
-Version: 	8.14.9
-Release: 	5
-License:	BSD
+Version: 	8.15.2
+Release: 	10
+License:	Sendmail
 Group:		System/Servers
 Provides:	mail-server sendmail-command
 Conflicts:	vacation postfix
@@ -36,35 +39,44 @@ Patch9:		sendmail-8.14.0-mdk.patch
 Patch12:	sendmail-submit.mc-mandriva.patch
 # (cjw) fix cyrus-imapd path, from fedora pkg
 Patch13:	sendmail-8.13.0-cyrus.patch
-Patch14:	sendmail-8.14.4-libdb5.patch
+# (ngompa) make sendmail dynamic with pie, from fedora
+Patch14:	sendmail-8.15.2-dynamic.patch
 Patch15:	sendmail-8.14.8-link.patch
+# From debian: allow fd:N socket address specifications for sendmail socket activation
+# http://anonscm.debian.org/cgit/collab-maint/sendmail.git/plain/debian/patches/socket_activation.patch
+Patch16:	socket_activation.patch
+# (cjw) fix build
+Patch17:	sendmail-8.15.1-format-security.patch
+# from fedora: fix build with openssl 1.1
+# https://bugzilla.redhat.com/show_bug.cgi?id=1400239
+Patch18:	sendmail-8.15.2-openssl-1.1.0-fix.patch
+# from fedora: another openssl 1.1 fix
+# https://bugzilla.redhat.com/show_bug.cgi?id=1473971
+Patch19:	sendmail-8.15.2-openssl-1.1.0-ecdhe-fix.patch
+# (ngompa) make sendmail make a shared library
+Patch20:	sendmail-8.14.3-sharedmilter.patch
+# from fedora: fix build with glibc 2.30
+Patch21:	sendmail-8.15.2-gethostbyname2.patch
 
 Patch50:	sendmail-8.11.1-up-limit.patch
 
-BuildRequires:	pkgconfig(libnsl)
-BuildRequires:	cyrus-sasl
-BuildRequires:	groff-base
-BuildRequires:	openssl
-BuildRequires:	db-devel
-BuildRequires:	gdbm-devel
-BuildRequires:	sasl-devel
-BuildRequires:	tcp_wrappers-devel
-BuildRequires:	openldap-devel
-BuildRequires:	pkgconfig(libtirpc)
-BuildRequires:	pkgconfig(openssl)
 Requires(pre):	rpm-helper
 Requires(pre):	update-alternatives
 Requires:	procmail
 Requires:	bash >= 2.0
 Requires:	cyrus-sasl
 Requires:	openssl
-Requires:	setup
-Provides:	mail-server
-Provides:	sendmail-command
-Conflicts:	vacation
-Conflicts:	postfix
-
-
+Requires: 	setup
+BuildRequires:  db-devel
+BuildRequires:  pkgconfig(libnsl)
+BuildRequires:  cyrus-sasl
+BuildRequires:  groff-for-man
+BuildRequires:  gdbm-devel
+BuildRequires:  pkgconfig(openssl)
+BuildRequires:  pkgconfig(libsasl2)
+BuildRequires:  tcp_wrappers-devel
+BuildRequires:  openldap-devel
+BuildRequires:	openssl
 
 %description
 The Sendmail program is a widely used Mail Transport Agent (MTA).
@@ -94,7 +106,8 @@ Sendmail.
 %package cf
 Summary:	The files needed to reconfigure Sendmail
 Group:		System/Servers
-Requires:	make, m4
+Requires:	make
+Requires:	m4
 
 %description cf
 This package includes the configuration files which you'd need to generate the
@@ -108,17 +121,31 @@ you'd need to install the sendmail-cf package to help you reconfigure Sendmail.
 Install the sendmail-cf package if you need to reconfigure your
 sendmail.cf file.
 
-%package devel
-Summary:	Sendmail static libraries and headers file
-Group: Development/Other
+%package -n %{libname}
+Summary:        Sendmail milter library
+Group:		System/Libraries
 
-%description devel
-This package includes the static libraries and header files
+%description -n %{libname}
+This package provides the Sendmail milter shared library.
+
+%package -n %{devname}
+Summary:	Sendmail milter development libraries and headers
+Group:		Development/C
+Conflicts:	%{name}-devel < 8.15.2-5
+Obsoletes:	%{name}-devel < 8.15.2-5
+Provides:	%{name}-devel = %{version}-%{release}
+Provides:	%{name}-milter-devel = %{version}-%{release}
+Provides:	libmilter-devel = %{version}-%{release}
+Requires:	%{libname}%{?_isa} = %{version}-%{release}
+
+%description -n %{devname}
+This package includes the libraries and header files
+to build applications using sendmail libmilter.
 
 %prep
-
 %setup -q
-%apply_patches
+cp devtools/M4/UNIX/{,shared}library.m4
+%autopatch -p1
 
 # XXX REVERTING
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/mandrake.mc
@@ -127,7 +154,7 @@ sed -e 's|@@PATH@@|\.\.|' < %{SOURCE9} > cf/cf/real-time.mc
 perl -pi -e 's|\/usr\/libexec|\/usr\/sbin|g' smrsh/README
 perl -pi -e 's|\/usr\/adm\/sm.bin|\/etc\/smrsh|g' smrsh/README
 perl -pi -e 's|\/usr\/lib\/sendmail|\/usr\/sbin\/sendmail|g' smrsh/README
-echo 'Paths modified for OpenMandriva Linux mailto:sbenedict@mandriva.com' >> smrsh/README
+echo 'Paths modified for Mageia.' >> smrsh/README
 
 perl -pi -e 's|\/usr\/adm\/sm.bin|\/etc\/smrsh|g' smrsh/smrsh.8
 perl -pi -e 's|sm.bin|\/etc\/smrsh|g' smrsh/smrsh.8
@@ -143,15 +170,14 @@ mv smrsh/smrsh.8.mdk smrsh/smrsh.8
 # (sb) m4 path
 perl -pi -e 's|\`sh \$BUILDTOOLS\/bin\/find_m4.sh\`|\/usr\/bin\/m4|g' cf/cf/Build
 
-# replace cc with __cc macro
-sed -i 's!cc!%{__cc}!g' devtools/M4/header.m4
-
 %build
-%setup_compile_flags
-export RPM_OPT_FLAGS="%optflags -DNETINET6"
+
+%serverbuild
+export RPM_OPT_FLAGS="%optflags -DNETINET6 -DHAS_GETHOSTBYNAME2"
+
 export confLIBDIR=%{_libdir}
 
-%make LDOPTS="%ldflags"
+%make_build LDOPTS="%ldflags -fPIC"
 
 %install
 mkdir -p %buildroot/{%_sysconfdir/sysconfig,%{_unitdir},%_sysconfdir/pam.d}
@@ -167,7 +193,6 @@ nameuser=`id -nu`
 namegroup=`id -ng`
 
 export confLIBDIR=%{_libdir}
-
 export ID="SBINOWN=${nameuser} SBINGRP=${namegroup} UBINOWN=${nameuser} UBINGRP=${namegroup} MANOWN=${nameuser} MANGRP=${namegroup} MSPQOWN=${nameuser} GBINGRP=${namegroup} GBINOWN=${nameuser} GBINGRP=${namegroup} MSPQOWN=${nameuser} MBINOWN=${nameuser} MBINGRP=${namegroup} LIBOWN=${nameuser} LIBGRP=${namegroup} CFOWN=${nameuser} CFGRP=${namegroup} INCOWN=${nameuser} INCGRP=${namegroup} CFMODE=0644"
 
 # (sb) fix example perl script interpreter paths
@@ -180,12 +205,12 @@ cat cf/cf/mandrake.mc | \
 cat cf/cf/submit.mc | \
         sed -e "s,%{_datadir}/sendmail-cf/m4/cf\.m4,../../cf/m4/cf.m4," \
         > cf/cf/submit-build.mc
-%makeinstall DESTDIR=%{buildroot} MANROOT=%{_mandir}/man CF=mandrake-build SUBMIT=submit-build $ID
+%make_install MANROOT=%{_mandir}/man CF=mandrake-build SUBMIT=submit-build $ID
 
-%make DESTDIR=%{buildroot} MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/rmail
-%make DESTDIR=%{buildroot} MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/mail.local
+%make_install MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/rmail
+%make_install MANROOT=%{_mandir}/man $ID force-install -C $OBJDIR/mail.local
 
-%make DESTDIR=%{buildroot} MANROOT=%{_mandir}/man $ID install -C $OBJDIR/smrsh
+%make_install MANROOT=%{_mandir}/man $ID install -C $OBJDIR/smrsh
 
 ln -sf ../sbin/makemap %{buildroot}/usr/bin/makemap
 
@@ -305,7 +330,7 @@ EOF
 
 # make strip able to touch these
 chmod 755 %{buildroot}%{_bindir}/* %{buildroot}%{_sbindir}/*
-	
+
 %pre
 %_pre_useradd mailnull /var/spool/mqueue /dev/null
 %_pre_useradd smmsp /var/spool/mqueue /dev/null
@@ -416,6 +441,7 @@ fi
 /sbin/chkconfig --add sendmail
 
 %files
+%license LICENSE
 %attr(0555,bin,bin) /usr/bin/vacation
 /usr/bin/hoststat
 /usr/bin/purgestat
@@ -497,8 +523,11 @@ fi
 %files doc
 %doc contrib sendmail-docs%{_docdir}/sendmail
 
-%files devel
+%files -n %{libname}
+%license LICENSE
+%{_libdir}/libmilter.so.%{miltersomajor}{,.*}
+
+%files -n %{devname}
 %doc libsm/{*.html,README} sendmail-docs%{_docdir}/sendmail/{libmilter,README.libmilter}
-%dir %{_includedir}/libmilter
-%{_includedir}/libmilter/*.h
-%{_libdir}/lib*.a
+%{_includedir}/libmilter/
+%{_libdir}/libmilter.so

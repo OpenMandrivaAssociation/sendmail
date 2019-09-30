@@ -1,0 +1,50 @@
+diff --git a/devtools/OS/Linux b/devtools/OS/Linux
+index bc02f82..7d320b0 100644
+--- a/devtools/OS/Linux
++++ b/devtools/OS/Linux
+@@ -7,7 +7,7 @@ define(`confDEPEND_TYPE', `CC-M')
+ define(`confCCOPTS_SO', `-fPIC')
+ define(`confSM_OS_HEADER', `sm_os_linux')
+ define(`confMANROOT', `/usr/man/man')
+-define(`confLIBS', `-ldl')
++define(`confLIBS', `-pie -ldl')
+ define(`confEBINDIR', `/usr/sbin')
+ APPENDDEF(`confLIBSEARCH', `crypt nsl')
+ 
+@@ -20,19 +20,19 @@ define(`confSONAME',`-soname')
+ ifelse(confBLDVARIANT, `DEBUG',
+ dnl Debug build
+ `
+-	define(`confOPTIMIZE',`-g -Wall')
++	define(`confOPTIMIZE',`-g -Wall -fpie')
+ ',
+ dnl Optimized build
+ confBLDVARIANT, `OPTIMIZED',
+ `
+-	define(`confOPTIMIZE',`-O2')
++	define(`confOPTIMIZE',`-O2 -fpie')
+ ',
+ dnl Purify build
+ confBLDVARIANT, `PURIFY',
+ `
+-	define(`confOPTIMIZE',`-g')
++	define(`confOPTIMIZE',`-g -fpie')
+ ',
+ dnl default
+ `
+-	define(`confOPTIMIZE',`-O2')
++	define(`confOPTIMIZE',`-O2 -fpie')
+ ')
+diff --git a/libsm/Makefile.m4 b/libsm/Makefile.m4
+index 5882bb6..5461ecb 100644
+--- a/libsm/Makefile.m4
++++ b/libsm/Makefile.m4
+@@ -6,7 +6,7 @@ define(`confREQUIRE_LIBSM', `true')
+ define(`confREQUIRE_SM_OS_H', `true')
+ PREPENDDEF(`confENVDEF', `confMAPDEF')
+ bldPRODUCT_START(`library', `libsm')
+-define(`bldSOURCES', ` assert.c debug.c errstring.c exc.c heap.c match.c rpool.c strdup.c strerror.c strl.c clrerr.c fclose.c feof.c ferror.c fflush.c fget.c fpos.c findfp.c flags.c fopen.c fprintf.c fpurge.c fput.c fread.c fscanf.c fseek.c fvwrite.c fwalk.c fwrite.c get.c makebuf.c put.c refill.c rewind.c setvbuf.c smstdio.c snprintf.c sscanf.c stdio.c strio.c ungetc.c vasprintf.c vfprintf.c vfscanf.c vprintf.c vsnprintf.c wbuf.c wsetup.c string.c stringf.c xtrap.c strto.c test.c strcasecmp.c strrevcmp.c signal.c clock.c config.c shm.c sem.c mbdb.c strexit.c cf.c ldap.c niprop.c mpeix.c memstat.c util.c inet6_ntop.c ')
++define(`bldSOURCES', ` assert.c debug.c errstring.c exc.c heap.c match.c rpool.c strdup.c strl.c clrerr.c fclose.c feof.c ferror.c fflush.c fget.c fpos.c findfp.c flags.c fopen.c fprintf.c fpurge.c fput.c fread.c fscanf.c fseek.c fvwrite.c fwalk.c fwrite.c get.c makebuf.c put.c refill.c rewind.c setvbuf.c smstdio.c snprintf.c sscanf.c stdio.c strio.c ungetc.c vasprintf.c vfprintf.c vfscanf.c vprintf.c vsnprintf.c wbuf.c wsetup.c string.c stringf.c xtrap.c strto.c test.c strcasecmp.c strrevcmp.c signal.c clock.c config.c shm.c sem.c mbdb.c strexit.c cf.c ldap.c niprop.c mpeix.c memstat.c util.c inet6_ntop.c ')
+ bldPRODUCT_END
+ dnl msg.c
+ dnl syslogio.c

@@ -51,6 +51,10 @@ dnl
 dnl Next line stops sendmail from allowing auth without encryption
 define(`confAUTH_OPTIONS', `Apy')dnl
 dnl
+dnl # which realm to use in SASL database (sasldb2)
+dnl #
+define(`confAUTH_REALM', `mail')dnl
+dnl # 
 dnl STARTTLS configuration
 dnl extract from http://www.sendmail.org/~ca/email/starttls.html
 dnl

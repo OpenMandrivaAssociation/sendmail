@@ -12,7 +12,7 @@
 +define(`confMAN1SRC', `1')
 +define(`confMAN5SRC', `5')
 +define(`confMAN8SRC', `8')
-+define(`confLDOPTS_SO', `-shared -Wl')
++define(`confLDOPTS_SO', `-shared -pthread')
 +define(`confLIBDIR', `esyscmd(`echo -n ${confLIBDIR}')')
 +define(`confMANROOT', `/usr/share/man/man')
 +define(`confSTDIR', `/var/log')

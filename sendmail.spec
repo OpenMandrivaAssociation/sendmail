@@ -7,8 +7,8 @@
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
-Version: 	8.15.2
-Release: 	12
+Version: 	8.17.2
+Release: 	1
 License:	Sendmail
 Group:		System/Servers
 Provides:	mail-server sendmail-command

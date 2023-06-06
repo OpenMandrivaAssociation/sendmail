@@ -1,6 +1,6 @@
 --- sendmail-8.14.3/cf/cf/submit.mc.bak	2006-04-05 07:54:41.000000000 +0200
 +++ sendmail-8.14.3/cf/cf/submit.mc	2008-11-16 19:33:22.546617777 +0100
-@@ -15,12 +15,18 @@
+@@ -15,15 +15,21 @@
  #
  
  divert(0)dnl
@@ -20,5 +20,8 @@
  dnl
  dnl If you use IPv6 only, change [127.0.0.1] to [IPv6:0:0:0:0:0:0:0:1]
  FEATURE(`msp', `[127.0.0.1]')dnl
+ dnl enable this for SMTPUTF8 support
+ dnl LOCAL_CONFIG
+ dnl O SMTPUTF8=true
 +define(`confRUN_AS_USER',`mail:mail')dnl
 +define(`confTRUSTED_USER',`mail')dnl

@@ -171,7 +171,7 @@ perl -pi -e 's|\`sh \$BUILDTOOLS\/bin\/find_m4.sh\`|\/usr\/bin\/m4|g' cf/cf/Buil
 %build
 
 %serverbuild
-export RPM_OPT_FLAGS="%optflags -DNETINET6 -DHAS_GETHOSTBYNAME2"
+export RPM_OPT_FLAGS="%optflags -DNETINET6 -DHAS_GETHOSTBYNAME2 -DHASFLOCK"
 
 export confLIBDIR=%{_libdir}
 

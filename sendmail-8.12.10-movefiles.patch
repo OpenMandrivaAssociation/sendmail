@@ -1,44 +1,21 @@
---- sendmail-8.12.10/mailstats/mailstats.8.movefiles	2002-09-27 01:03:39.000000000 +0200
-+++ sendmail-8.12.10/mailstats/mailstats.8	2003-12-11 19:34:32.000000000 +0100
-@@ -100,7 +100,7 @@
- .SH FILES
- .PD 0.2v
- .TP 2.5i
--/etc/mail/sendmail.cf
-+/etc/sendmail.cf
- The default
- .B sendmail
- configuration file.
 --- sendmail-8.12.10/sendmail/sendmail.0.movefiles	2003-09-16 22:53:57.000000000 +0200
 +++ sendmail-8.12.10/sendmail/sendmail.0	2003-12-11 19:34:32.000000000 +0100
-@@ -404,13 +404,13 @@
+@@ -433,10 +433,10 @@ FFIILLEESS
+        names are all specified in _/_e_t_c_/_m_a_i_l_/_s_e_n_d_m_a_i_l_._c_f.  Thus,  these  values
         are only approximations.
- 
  
 -        /etc/mail/aliases
 +        /etc/aliases
                raw data for alias names
  
-         /etc/mail/aliases.db
+-        /etc/mail/aliases.db
++        /etc/aliases.db
                data base of alias names
  
--        /etc/mail/sendmail.cf
-+        /etc/sendmail.cf
-               configuration file
- 
-         /etc/mail/helpfile
+         /etc/mail/sendmail.cf
 --- sendmail-8.12.10/sendmail/sendmail.8.movefiles	2003-05-20 18:38:15.000000000 +0200
 +++ sendmail-8.12.10/sendmail/sendmail.8	2003-12-11 19:34:32.000000000 +0100
-@@ -662,14 +662,14 @@
- .I http://www.sendmail.org/tips/DontBlameSendmail.html
- .SH FILES
- Except for the file
--.I /etc/mail/sendmail.cf
-+.I /etc/sendmail.cf
- itself the following pathnames are all specified in
--.IR /etc/mail/sendmail.cf .
-+.IR /etc/sendmail.cf .
- Thus, 
+@@ -716,10 +716,10 @@ Thus,
  these values are only approximations.
  .PP
  .TP
@@ -46,10 +23,14 @@
 + /etc/aliases
  raw data for alias names
  .TP
-  /etc/mail/aliases.db
+- /etc/mail/aliases.db
++ /etc/aliases.db
+ data base of alias names
+ .TP
+  /etc/mail/sendmail.cf
 --- sendmail-8.12.10/sendmail/newaliases.0.movefiles	2003-09-16 22:53:57.000000000 +0200
 +++ sendmail-8.12.10/sendmail/newaliases.0	2003-12-11 19:48:02.000000000 +0100
-@@ -10,7 +10,7 @@
+@@ -10,7 +10,7 @@ SSYYNNOOPPSSIISS
  
  DDEESSCCRRIIPPTTIIOONN
         NNeewwaalliiaasseess  rebuilds  the  random access data base for the mail aliases
@@ -58,7 +39,7 @@
         in order for the change to take effect.
  
         NNeewwaalliiaasseess is identical to ``sendmail -bi''.
-@@ -22,7 +22,7 @@
+@@ -22,7 +22,7 @@ DDEESSCCRRIIPPTTIIOONN
         sseennddmmaaiill..
  
  FFIILLEESS

@@ -31,7 +31,7 @@ Source15:	sm-client.service
 
 Patch1:		sendmail-8.10.0-makemapman.patch
 Patch3:		sendmail-8.8.7-rmail.patch
-Patch5:		sendmail-8.12.10-movefiles.patch
+#Patch5:		sendmail-8.12.10-movefiles.patch
 # build configuration
 Patch9:		sendmail-8.14.0-mdk.patch
 # (cjw) set .pid file for queue runner and set some other Mageia defaults

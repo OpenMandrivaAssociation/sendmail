@@ -45,8 +45,6 @@ Patch15:	sendmail-8.14.8-link.patch
 # From debian: allow fd:N socket address specifications for sendmail socket activation
 # http://anonscm.debian.org/cgit/collab-maint/sendmail.git/plain/debian/patches/socket_activation.patch
 Patch16:	socket_activation.patch
-# (cjw) fix build
-Patch17:	sendmail-8.15.1-format-security.patch
 # from fedora: fix build with openssl 1.1
 # https://bugzilla.redhat.com/show_bug.cgi?id=1400239
 Patch18:	sendmail-8.15.2-openssl-1.1.0-fix.patch

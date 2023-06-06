@@ -47,7 +47,7 @@ Patch15:	sendmail-8.14.8-link.patch
 Patch16:	socket_activation.patch
 # from fedora: fix build with openssl 1.1
 # https://bugzilla.redhat.com/show_bug.cgi?id=1400239
-Patch18:	sendmail-8.15.2-openssl-1.1.0-fix.patch
+#Patch18:	sendmail-8.15.2-openssl-1.1.0-fix.patch
 # from fedora: another openssl 1.1 fix
 # https://bugzilla.redhat.com/show_bug.cgi?id=1473971
 Patch19:	sendmail-8.15.2-openssl-1.1.0-ecdhe-fix.patch

@@ -284,7 +284,7 @@ for map in virtusertable access domaintable mailertable
   do
     touch %{buildroot}/%_sysconfdir/mail/${map}
     chmod 0644 %{buildroot}/%_sysconfdir/mail/${map}
-    %{buildroot}/usr/sbin/makemap -C %{buildroot}/%_sysconfdir/mail/sendmail.cf hash %{buildroot}/%_sysconfdir/mail/${map}.db < %{buildroot}/%_sysconfdir/mail/${map}
+#    %{buildroot}/usr/sbin/makemap -C %{buildroot}/%_sysconfdir/mail/sendmail.cf hash %{buildroot}/%_sysconfdir/mail/${map}.db < %{buildroot}/%_sysconfdir/mail/${map}
     chmod 0644 %{buildroot}/%_sysconfdir/mail/${map}.db
   done
 install -m644 %{SOURCE3} %{buildroot}/%_sysconfdir/aliases

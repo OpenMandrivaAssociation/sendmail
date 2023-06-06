@@ -212,7 +212,7 @@ cat cf/cf/submit.mc | \
 
 %make_install MANROOT=%{_mandir}/man $ID install -C $OBJDIR/smrsh
 
-ln -sf ../sbin/makemap %{buildroot}/usr/bin/makemap
+#ln -sf ../sbin/makemap %{buildroot}/usr/bin/makemap
 
 # install docs by hand - do it in builddir instead of RPM_BUILD_ROOT
 rm -fr sendmail-docs

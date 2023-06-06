@@ -54,7 +54,7 @@ Patch16:	socket_activation.patch
 # (ngompa) make sendmail make a shared library
 Patch20:	sendmail-8.14.3-sharedmilter.patch
 # from fedora: fix build with glibc 2.30
-Patch21:	sendmail-8.15.2-gethostbyname2.patch
+#Patch21:	sendmail-8.15.2-gethostbyname2.patch
 
 Patch50:	sendmail-8.11.1-up-limit.patch
 

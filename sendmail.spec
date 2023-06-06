@@ -50,7 +50,7 @@ Patch16:	socket_activation.patch
 #Patch18:	sendmail-8.15.2-openssl-1.1.0-fix.patch
 # from fedora: another openssl 1.1 fix
 # https://bugzilla.redhat.com/show_bug.cgi?id=1473971
-Patch19:	sendmail-8.15.2-openssl-1.1.0-ecdhe-fix.patch
+#Patch19:	sendmail-8.15.2-openssl-1.1.0-ecdhe-fix.patch
 # (ngompa) make sendmail make a shared library
 Patch20:	sendmail-8.14.3-sharedmilter.patch
 # from fedora: fix build with glibc 2.30

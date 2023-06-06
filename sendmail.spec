@@ -65,7 +65,7 @@ Requires:	bash >= 2.0
 Requires:	cyrus-sasl
 Requires:	openssl
 Requires: 	setup
-BuildRequires:  db-devel
+BuildRequires:  db5-devel
 BuildRequires:  pkgconfig(libnsl)
 BuildRequires:  cyrus-sasl
 BuildRequires:  groff-for-man

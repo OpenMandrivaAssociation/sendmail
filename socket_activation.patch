@@ -51,10 +51,10 @@ index 48c552f..2249a1f 100644
  	if (!ValidSocket(sock))
  	{
  		smi_log(SMI_LOG_ERR,
-@@ -466,6 +485,7 @@ mi_milteropen(conn, backlog, rmsocket, name)
+@@ -485,6 +485,7 @@ mi_milteropen(conn, backlog, rmsocket, n
  #if NETUNIX
  	    addr.sa.sa_family != AF_UNIX &&
- #endif /* NETUNIX */
+ #endif
 +	    addr.sa.sa_family != AF_UNSPEC &&
  	    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (void *) &sockopt,
  		       sizeof(sockopt)) == -1)
@@ -69,10 +69,10 @@ index 48c552f..2249a1f 100644
  	{
  		smi_log(SMI_LOG_ERR,
  			"%s: Unable to bind to port %s: %s",
-@@ -817,7 +838,7 @@ mi_listener(conn, dbg, smfi, timeout, backlog)
- # ifdef BSD4_4_SOCKADDR
+@@ -838,7 +839,7 @@ mi_listener(conn, dbg, smfi, timeout, ba
+ #ifdef BSD4_4_SOCKADDR
  		     cliaddr.sa.sa_len == 0 ||
- # endif /* BSD4_4_SOCKADDR */
+ #endif
 -		     cliaddr.sa.sa_family != L_family))
 +		     (L_family != AF_UNSPEC && cliaddr.sa.sa_family != L_family)))
  		{

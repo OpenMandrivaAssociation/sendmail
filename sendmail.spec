@@ -13,7 +13,7 @@ License:	Sendmail
 Group:		System/Servers
 Provides:	mail-server sendmail-command
 Conflicts:	vacation postfix
-URL:		http://www.sendmail.com/sm/open_source/
+URL:		https://www.sendmail.com/sm/open_source/
 
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
 Source2:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz.sig

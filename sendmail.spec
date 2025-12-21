@@ -67,6 +67,7 @@ Requires:	bash >= 2.0
 Requires:	cyrus-sasl
 Requires:	openssl
 Requires: 	setup
+BuildRequires:	make
 BuildRequires:  db-devel
 BuildRequires:  pkgconfig(libnsl)
 BuildRequires:  cyrus-sasl

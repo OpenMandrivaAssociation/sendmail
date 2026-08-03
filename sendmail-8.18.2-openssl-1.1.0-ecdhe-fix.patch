@@ -1,0 +1,25 @@
+--- a/sendmail/tls.c	2026-08-03 04:13:00.287900322 +0200
++++ b/sendmail/tls.c	2026-08-03 04:13:16.893269289 +0200
+@@ -1557,19 +1557,9 @@
+ 		SSL_CTX_set_options(*tls_ctx, SSL_OP_SINGLE_ECDH_USE);
+ 		SSL_CTX_set_ecdh_auto(*tls_ctx, 1);
+ #  elif TLS_EC == 1
+-		ecdh = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1);
+-		if (ecdh != NULL)
+-		{
+-			SSL_CTX_set_options(*tls_ctx, SSL_OP_SINGLE_ECDH_USE);
+-			SSL_CTX_set_tmp_ecdh(*tls_ctx, ecdh);
+-			EC_KEY_free(ecdh);
+-		}
+-		else if (LogLevel > 9)
+-		{
+-			sm_syslog(LOG_WARNING, NOQID,
+-				  "STARTTLS=%s, EC_KEY_new_by_curve_name(NID_X9_62_prime256v1)=failed, error=%s",
+-				  who, ERR_error_string(ERR_get_error(), NULL));
+-		}
++		/* OpenSSL 1.1+: prefer auto ECDHE curve selection */
++		SSL_CTX_set_options(*tls_ctx, SSL_OP_SINGLE_ECDH_USE);
++		SSL_CTX_set_ecdh_auto(*tls_ctx, 1);
+ #  endif /* TLS_EC */
+ 
+ 	}

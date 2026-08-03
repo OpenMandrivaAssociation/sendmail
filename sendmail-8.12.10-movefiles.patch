@@ -1,6 +1,6 @@
---- sendmail-8.12.10/mailstats/mailstats.8.movefiles	2002-09-27 01:03:39.000000000 +0200
-+++ sendmail-8.12.10/mailstats/mailstats.8	2003-12-11 19:34:32.000000000 +0100
-@@ -100,7 +100,7 @@
+--- sendmail-8.18.2/mailstats/mailstats.8	2023-02-09 19:24:38.000000000 +0100
++++ sendmail-8.18.2/mailstats/mailstats.8	2026-08-03 04:10:50.027492417 +0200
+@@ -103,7 +103,7 @@
  .SH FILES
  .PD 0.2v
  .TP 2.5i
@@ -9,11 +9,11 @@
  The default
  .B sendmail
  configuration file.
---- sendmail-8.12.10/sendmail/sendmail.0.movefiles	2003-09-16 22:53:57.000000000 +0200
-+++ sendmail-8.12.10/sendmail/sendmail.0	2003-12-11 19:34:32.000000000 +0100
-@@ -404,13 +404,13 @@
+--- sendmail-8.18.2/sendmail/sendmail.0	2025-12-23 06:37:30.000000000 +0100
++++ sendmail-8.18.2/sendmail/sendmail.0	2026-08-03 04:10:50.028064481 +0200
+@@ -431,13 +431,13 @@
+        names  are  all specified in [4m/etc/mail/sendmail.cf[24m.  Thus, these values
         are only approximations.
- 
  
 -        /etc/mail/aliases
 +        /etc/aliases
@@ -27,10 +27,10 @@
                configuration file
  
          /etc/mail/helpfile
---- sendmail-8.12.10/sendmail/sendmail.8.movefiles	2003-05-20 18:38:15.000000000 +0200
-+++ sendmail-8.12.10/sendmail/sendmail.8	2003-12-11 19:34:32.000000000 +0100
-@@ -662,14 +662,14 @@
- .I http://www.sendmail.org/tips/DontBlameSendmail.html
+--- sendmail-8.18.2/sendmail/sendmail.8	2024-01-24 18:09:22.000000000 +0100
++++ sendmail-8.18.2/sendmail/sendmail.8	2026-08-03 04:10:50.027780169 +0200
+@@ -709,14 +709,14 @@
+ .I "Sendmail Installation and Operation Guide"
  .SH FILES
  Except for the file
 -.I /etc/mail/sendmail.cf
@@ -38,7 +38,7 @@
  itself the following pathnames are all specified in
 -.IR /etc/mail/sendmail.cf .
 +.IR /etc/sendmail.cf .
- Thus, 
+ Thus,
  these values are only approximations.
  .PP
  .TP
@@ -47,28 +47,28 @@
  raw data for alias names
  .TP
   /etc/mail/aliases.db
---- sendmail-8.12.10/sendmail/newaliases.0.movefiles	2003-09-16 22:53:57.000000000 +0200
-+++ sendmail-8.12.10/sendmail/newaliases.0	2003-12-11 19:48:02.000000000 +0100
-@@ -10,7 +10,7 @@
+--- sendmail-8.18.2/sendmail/newaliases.0	2025-12-23 06:37:30.000000000 +0100
++++ sendmail-8.18.2/sendmail/newaliases.0	2026-08-03 04:10:50.028271213 +0200
+@@ -8,7 +8,7 @@
  
- DDEESSCCRRIIPPTTIIOONN
-        NNeewwaalliiaasseess  rebuilds  the  random access data base for the mail aliases
+ [1mDESCRIPTION[0m
+        [1mNewaliases  [22mrebuilds  the  random access data base for the mail aliases
 -       file /etc/mail/aliases.  It must be run each time this file is  changed
 +       file /etc/aliases.  It must be run each time this file is  changed
         in order for the change to take effect.
  
-        NNeewwaalliiaasseess is identical to ``sendmail -bi''.
-@@ -22,7 +22,7 @@
-        sseennddmmaaiill..
+        [1mNewaliases [22mis identical to ``sendmail -bi''.
+@@ -20,7 +20,7 @@
+        [1msendmail.[0m
  
- FFIILLEESS
+ [1mFILES[0m
 -       /etc/mail/aliases   The mail aliases file
 +       /etc/aliases   The mail aliases file
  
- SSEEEE AALLSSOO
+ [1mSEE ALSO[0m
         aliases(5), sendmail(8)
---- sendmail-8.12.10/sendmail/newaliases.1.movefiles	2001-10-10 05:23:17.000000000 +0200
-+++ sendmail-8.12.10/sendmail/newaliases.1	2003-12-11 19:34:32.000000000 +0100
+--- sendmail-8.18.2/sendmail/newaliases.1	2025-10-20 21:09:43.000000000 +0200
++++ sendmail-8.18.2/sendmail/newaliases.1	2026-08-03 04:10:50.028344123 +0200
 @@ -20,7 +20,7 @@
  .SH DESCRIPTION
  .B Newaliases
@@ -87,9 +87,9 @@
  The mail aliases file
  .SH SEE ALSO
  aliases(5), sendmail(8)
---- sendmail-8.12.10/cf/m4/cfhead.m4.movefiles	2003-04-03 19:51:51.000000000 +0200
-+++ sendmail-8.12.10/cf/m4/cfhead.m4	2003-12-11 19:34:32.000000000 +0100
-@@ -259,7 +259,7 @@
+--- sendmail-8.18.2/cf/m4/cfhead.m4	2023-02-09 19:24:38.000000000 +0100
++++ sendmail-8.18.2/cf/m4/cfhead.m4	2026-08-03 04:10:50.028419564 +0200
+@@ -275,7 +275,7 @@
  define(`DATABASE_MAP_TYPE', `hash')
  
  # set up default values for options
@@ -98,8 +98,8 @@
  define(`confMAILER_NAME', ``MAILER-DAEMON'')
  define(`confFROM_LINE', `From $g $d')
  define(`confOPERATORS', `.:%@!^/[]+')
---- sendmail-8.12.10/praliases/praliases.8.movefiles	2000-12-15 20:53:45.000000000 +0100
-+++ sendmail-8.12.10/praliases/praliases.8	2003-12-11 19:34:32.000000000 +0100
+--- sendmail-8.18.2/praliases/praliases.8	2023-02-09 19:24:38.000000000 +0100
++++ sendmail-8.18.2/praliases/praliases.8	2026-08-03 04:10:50.028595445 +0200
 @@ -48,7 +48,7 @@
  utility exits 0 on success, and >0 if an error occurs.
  .SH FILES

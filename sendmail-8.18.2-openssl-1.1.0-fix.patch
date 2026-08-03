@@ -1,0 +1,50 @@
+--- a/sendmail/tls.c	2025-12-22 17:48:09.000000000 +0100
++++ b/sendmail/tls.c	2026-08-03 04:13:00.286239148 +0200
+@@ -1244,6 +1244,28 @@
+ 	SSL_CTX_set_options(*tls_ctx, SSL_OP_NO_SSLv2);
+ # endif
+ 
++
++static RSA *
++generate_rsa_key(bits, e)
++	int bits;
++	unsigned long e;
++{
++	BIGNUM *bne;
++	RSA *rsa = NULL;
++
++	bne = BN_new();
++	if (bne && BN_set_word(bne, e) == 1)
++		rsa = RSA_new();
++	if (rsa && RSA_generate_key_ex(rsa, bits, bne, NULL) != 1)
++	{
++		RSA_free(rsa);
++		rsa = NULL;
++	}
++	BN_free(bne);
++	return rsa;
++}
++
++
+ # if !TLS_NO_RSA && MTA_RSA_TMP_CB
+ 	/*
+ 	**  Create a temporary RSA key
+@@ -1256,8 +1278,7 @@
+ 	if (bitset(TLS_I_RSA_TMP, req)
+ #  if SM_CONF_SHM
+ 	    && ShmId != SM_SHM_NO_ID &&
+-	    (rsa_tmp = RSA_generate_key(RSA_KEYLENGTH, RSA_F4, NULL,
+-					NULL)) == NULL
++	    (rsa_tmp = generate_rsa_key(RSA_KEYLENGTH, RSA_F4)) == NULL
+ #  else /* SM_CONF_SHM */
+ 	    && 0	/* no shared memory: no need to generate key now */
+ #  endif /* SM_CONF_SHM */
+@@ -2403,7 +2424,7 @@
+ 
+ 	if (rsa_tmp != NULL)
+ 		RSA_free(rsa_tmp);
+-	rsa_tmp = RSA_generate_key(RSA_KEYLENGTH, RSA_F4, NULL, NULL);
++	rsa_tmp = generate_rsa_key(RSA_KEYLENGTH, RSA_F4);
+ 	if (rsa_tmp == NULL)
+ 	{
+ 		if (LogLevel > 0)

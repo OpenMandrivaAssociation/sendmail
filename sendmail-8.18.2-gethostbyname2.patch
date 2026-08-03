@@ -1,0 +1,10 @@
+--- a/libmilter/sm_gethost.c	2023-02-09 19:24:38.000000000 +0100
++++ b/libmilter/sm_gethost.c	2026-08-03 04:13:16.921163591 +0200
+@@ -50,6 +50,7 @@
+ 	int *err;
+ {
+ 	struct hostent *h;
++	/* Prefer gethostbyname2 when available (glibc / HAS_GETHOSTBYNAME2). */
+ # if HAS_GETHOSTBYNAME2
+ 
+ 	h = gethostbyname2(name, family);

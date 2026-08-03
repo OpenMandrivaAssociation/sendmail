@@ -7,8 +7,8 @@
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Name:		sendmail
-Version: 	8.15.2
-Release: 	13
+Version: 	8.18.2
+Release: 	1
 License:	Sendmail
 Group:		System/Servers
 Provides:	mail-server sendmail-command
@@ -40,7 +40,7 @@ Patch12:	sendmail-submit.mc-mandriva.patch
 # (cjw) fix cyrus-imapd path, from fedora pkg
 Patch13:	sendmail-8.13.0-cyrus.patch
 # (ngompa) make sendmail dynamic with pie, from fedora
-Patch14:	sendmail-8.15.2-dynamic.patch
+Patch14:	sendmail-8.18.2-dynamic.patch
 Patch15:	sendmail-8.14.8-link.patch
 # From debian: allow fd:N socket address specifications for sendmail socket activation
 # http://anonscm.debian.org/cgit/collab-maint/sendmail.git/plain/debian/patches/socket_activation.patch
@@ -49,14 +49,14 @@ Patch16:	socket_activation.patch
 Patch17:	sendmail-8.15.1-format-security.patch
 # from fedora: fix build with openssl 1.1
 # https://bugzilla.redhat.com/show_bug.cgi?id=1400239
-Patch18:	sendmail-8.15.2-openssl-1.1.0-fix.patch
+Patch18:	sendmail-8.18.2-openssl-1.1.0-fix.patch
 # from fedora: another openssl 1.1 fix
 # https://bugzilla.redhat.com/show_bug.cgi?id=1473971
-Patch19:	sendmail-8.15.2-openssl-1.1.0-ecdhe-fix.patch
+Patch19:	sendmail-8.18.2-openssl-1.1.0-ecdhe-fix.patch
 # (ngompa) make sendmail make a shared library
 Patch20:	sendmail-8.14.3-sharedmilter.patch
 # from fedora: fix build with glibc 2.30
-Patch21:	sendmail-8.15.2-gethostbyname2.patch
+Patch21:	sendmail-8.18.2-gethostbyname2.patch
 
 Patch50:	sendmail-8.11.1-up-limit.patch
 
